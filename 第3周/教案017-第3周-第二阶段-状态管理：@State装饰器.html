@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教案017：状态管理 · @State装饰器让UI“活”起来</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
+            line-height: 1.65;
+            color: #1f2d3a;
+            background-color: #f0f6fc;
+            padding: 30px 20px;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px rgba(0, 40, 60, 0.1);
+            overflow: hidden;
+            padding: 30px 35px 50px;
+        }
+        h1 {
+            font-size: 2.4rem;
+            background: linear-gradient(135deg, #0a2e4a, #0078d4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-align: center;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            background: #e9f2fa;
+            display: inline-block;
+            width: auto;
+            margin: 0 auto 20px;
+            padding: 8px 28px;
+            border-radius: 60px;
+            color: #0066a0;
+            font-weight: 500;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .header-meta {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            background: #eef3fc;
+            padding: 12px 20px;
+            border-radius: 40px;
+            margin: 20px 0 30px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #004d7a;
+            border: 1px solid #cde0ef;
+        }
+        .section {
+            background: white;
+            border-radius: 28px;
+            margin-bottom: 35px;
+            padding: 0 5px;
+        }
+        h2 {
+            font-size: 1.8rem;
+            color: #0a4b6e;
+            border-left: 8px solid #0078d4;
+            padding-left: 20px;
+            margin: 30px 0 20px 0;
+            background: linear-gradient(to right, #f0f8ff, #ffffff);
+            border-radius: 0 20px 20px 0;
+        }
+        h3 {
+            font-size: 1.45rem;
+            margin: 25px 0 12px 0;
+            color: #1f6392;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px dotted #b9d9f0;
+            padding-bottom: 8px;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 18px 20px;
+            border: 1px solid #dcecf5;
+            box-shadow: 0 6px 14px rgba(0, 40, 60, 0.05);
+            transition: all 0.2s;
+        }
+        .card:hover {
+            border-color: #0078d4;
+            box-shadow: 0 12px 22px rgba(0, 120, 212, 0.12);
+        }
+        .card h4 {
+            font-size: 1.35rem;
+            color: #005a9c;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 4px solid #0078d4;
+            padding-left: 14px;
+        }
+        .badge {
+            background: #0078d4;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 10px;
+            border-radius: 30px;
+            font-weight: normal;
+            margin-left: 8px;
+        }
+        .task-box {
+            background: #f0f9fe;
+            border-left: 6px solid #28a745;
+            padding: 18px 24px;
+            border-radius: 24px;
+            margin: 20px 0;
+        }
+        .important-note {
+            background: #fff8e7;
+            border-left: 6px solid #ff9800;
+            padding: 18px 24px;
+            border-radius: 24px;
+            margin: 20px 0;
+        }
+        .code-block {
+            background: #1e2f3c;
+            color: #e0f2fe;
+            padding: 16px 22px;
+            border-radius: 20px;
+            font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 5px solid #0078d4;
+            white-space: pre;
+            line-height: 1.45;
+        }
+        .code-block pre {
+            margin: 0;
+            font-family: inherit;
+            white-space: pre;
+        }
+        .step-guide {
+            background: #f8fafd;
+            border-radius: 28px;
+            padding: 20px 28px;
+            counter-reset: step-counter;
+            list-style: none;
+        }
+        .step-guide li {
+            counter-increment: step-counter;
+            margin-bottom: 20px;
+            padding-left: 52px;
+            position: relative;
+            font-weight: 500;
+        }
+        .step-guide li::before {
+            content: counter(step-counter);
+            background: #0078d4;
+            color: white;
+            width: 34px;
+            height: 34px;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            left: 0;
+            top: -2px;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px 0 20px;
+        }
+        .button {
+            background: linear-gradient(95deg, #0078d4, #005a9e);
+            border: none;
+            color: white;
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 5px 12px rgba(0, 90, 158, 0.3);
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(95deg, #008ae6, #006bb3);
+            box-shadow: 0 10px 20px rgba(0, 90, 158, 0.4);
+        }
+        .tip-icon {
+            font-size: 1.4rem;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #6f8ea3;
+            border-top: 1px solid #d4e2ef;
+            padding-top: 25px;
+            margin-top: 35px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        th {
+            background: #0078d4;
+            color: white;
+            padding: 10px;
+            font-weight: 600;
+        }
+        td {
+            border: 1px solid #cfdfec;
+            padding: 10px;
+        }
+        @media (max-width: 680px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.9rem; }
+            .code-block { font-size: 0.8rem; white-space: pre-wrap; }
+        }
+        .highlight {
+            background: #e8f4fd;
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-family: monospace;
+            color: #0070c0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>⚡ 状态管理 · @State让UI“活”起来</h1>
+    <div style="text-align: center;">
+        <span class="subtitle">🎯 声明式UI核心 · 数据驱动视图自动刷新</span>
+    </div>
+    <div class="header-meta">
+        <span>📅 第3周 · 星期四 第5-6节 (12:30-14:00)</span>
+        <span>⏱️ 2课时 (80分钟)  |  💻 理实一体化 · 大量动手编码</span>
+        <span>🎯 授课对象：技师学院 · 鸿蒙集训队</span>
+    </div>
+
+    <!-- ========= 学习目标卡片 ========= -->
+    <div class="section">
+        <h2>🎯 学习目标 · 这堂课我们要拿下什么？</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h4>📘 知识点1 <span class="badge">@State本质</span></h4>
+                <p><strong>学到：</strong> @State装饰器能让变量变化时自动刷新UI，告别手动操作DOM。</p>
+                <p>💡 类比：就像Excel表格，公式一变，结果自动更新！</p>
+            </div>
+            <div class="card">
+                <h4>🛠️ 技能点1 <span class="badge">声明状态变量</span></h4>
+                <p><strong>学会：</strong> 在组件中用 <code class="highlight">@State count: number = 0</code> 定义响应式数据。</p>
+            </div>
+            <div class="card">
+                <h4>📘 知识点2 <span class="badge">单向数据流</span></h4>
+                <p><strong>学到：</strong> 状态变化 → UI重新渲染，事件修改状态，页面自动变化。</p>
+            </div>
+            <div class="card">
+                <h4>🛠️ 技能点2 <span class="badge">计数器实战</span></h4>
+                <p><strong>学会：</strong> 写一个点击按钮数字增加的简单应用，理解“数据驱动视图”。</p>
+            </div>
+            <div class="card">
+                <h4>📘 知识点3 <span class="badge">状态提升思想</span></h4>
+                <p><strong>学到：</strong> 多个组件共享状态时，将状态放到父组件，用@Link或@Prop传递。</p>
+            </div>
+            <div class="card">
+                <h4>🛠️ 技能点3 <span class="badge">资产状态切换</span></h4>
+                <p><strong>学会：</strong> 为资产管理系统增加“借出/归还”状态切换按钮，实时刷新界面。</p>
+            </div>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">💡</span> <strong>老师暖心提示：</strong> 这节课是鸿蒙开发的分水岭！搞懂了@State，你就能做出动态交互的App。代码虽然简单，但思想很值钱。</p>
+        </div>
+    </div>
+
+    <!-- ========= 知识讲解 ========= -->
+    <div class="section">
+        <h2>🧩 知识讲解 · 从静态页面到动态交互</h2>
+        
+        <h3>1. 为什么需要状态管理？—— 静态UI vs 动态UI</h3>
+        <div class="task-box">
+            <p><span class="tip-icon">🔄</span> <strong>生活类比：</strong> 静态UI像一张打印的照片，永远不变。动态UI像手机屏幕，你点一下，数字增加，文字变化，照片切换——这就是“状态”在起作用！</p>
+            <p><strong>传统命令式编程：</strong> 你手动告诉UI“把这个文本改成新值”。<br>
+            <strong>鸿蒙声明式编程：</strong> 你只需要说“这个变量是状态，它变了UI自动变”。<br>
+            ✨ @State就是实现这种魔法的装饰器！</p>
+        </div>
+
+        <h3>2. @State 语法与工作原理</h3>
+        <div class="code-block">
+            <pre>@Component
+struct Counter {
+    // @State 装饰的变量，一旦改变，build方法会重新执行
+    @State count: number = 0
+
+    build() {
+        Column() {
+            Text(`点击次数: ${this.count}`)
+                .fontSize(24)
+                .margin(20)
+            Button('点我 +1')
+                .onClick(() => {
+                    // 修改状态，UI自动刷新
+                    this.count++
+                })
+        }
+        .width('100%')
+        .height('100%')
+        .justifyContent(FlexAlign.Center)
+    }
+}</pre>
+        </div>
+        <p>📌 <strong>关键规则：</strong></p>
+        <ul>
+            <li>@State只能用在<strong>struct</strong>（组件）内部的成员变量。</li>
+            <li>状态变量变化必须在UI线程（比如按钮的onClick回调里）。</li>
+            <li>UI中直接使用 <code class="highlight">this.变量名</code> 即可自动订阅变化。</li>
+        </ul>
+
+        <h3>3. 状态提升与组件通信（预热）</h3>
+        <div class="card-grid">
+            <div class="card">
+                <h4>👪 父子组件</h4>
+                <p>父组件用@State，子组件用<span class="highlight">@Prop</span>接收（单向），或<span class="highlight">@Link</span>双向同步。</p>
+            </div>
+            <div class="card">
+                <h4>📦 简单案例</h4>
+                <p>父组件定义资产列表，子组件展示每一项，点击“借用”按钮时父组件的状态更新，列表重新渲染。</p>
+            </div>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">🧠</span> 今天我们先专注单个组件内的@State，下节课再深入学习@Prop和@Link。但思维可以先建立：状态放在最需要共享的父组件中。</p>
+        </div>
+    </div>
+
+    <!-- ========= 超详细实训指导 ========= -->
+    <div class="section">
+        <h2>⚙️ 技能实训 · 从零到一动手做</h2>
+        <p style="background:#e2f0fe; border-radius: 40px; padding: 8px 20px; display: inline-block; margin-bottom: 15px;">✅ 本次实训目标：独立写出计数器 + 资产状态切换组件，掌握@State核心用法</p>
+
+        <h3>🔧 实训一：新建项目并实现经典计数器（20分钟）</h3>
+        <div class="step-guide">
+            <li><strong>打开DevEco Studio，新建一个Empty Ability项目</strong>，命名为 <code>StateDemo</code>，SDK选择API 9+。</li>
+            <li><strong>找到入口页面 <code>Index.ets</code></strong>，删除原有代码，跟着老师一步一步输入计数器代码（老师投影逐行讲解）。</li>
+            <li><strong>编写代码：</strong> 定义一个@State变量，一个按钮和一个文本。按钮点击时变量自增。</li>
+            <li><strong>运行到模拟器/真机</strong>，观察点击按钮时数字是否变化。如果没变化，检查@State是否拼写正确，是否在build里使用了 this.变量。</li>
+            <li><strong>📸 截图打卡：</strong> 把运行成功的模拟器界面发到小组群，并尝试把按钮文字改为“减一”，实现减一功能（边界处理：不小于0）。</li>
+        </div>
+        <div class="task-box">
+            <p>💡 <strong>老师巡场重点：</strong> 帮助学生解决“@State未导入”或“变量未在build中使用”的问题。鼓励学生互相检查代码。</p>
+        </div>
+        <div class="code-block">
+            <pre>// 计数器完整代码（包含加/减）
+@Component
+struct Counter {
+    @State count: number = 0
+
+    build() {
+        Column({ space: 20 }) {
+            Text(`当前计数: ${this.count}`)
+                .fontSize(32)
+                .fontWeight(FontWeight.Bold)
+
+            Row({ space: 30 }) {
+                Button('➕ 增加')
+                    .onClick(() => { this.count++ })
+                    .backgroundColor('#0078D4')
+                Button('➖ 减少')
+                    .onClick(() => {
+                        if (this.count > 0) this.count--
+                    })
+                    .backgroundColor('#E64340')
+            }
+        }
+        .width('100%')
+        .height('100%')
+        .justifyContent(FlexAlign.Center)
+    }
+}</pre>
+        </div>
+
+        <h3>🔧 实训二：资产状态切换小模块（25分钟）</h3>
+        <div class="step-guide">
+            <li><strong>在同一个项目里新建一个组件文件</strong> <code>AssetStatus.ets</code>，定义一个卡片组件，展示资产名称和“状态”按钮。</li>
+            <li><strong>组件内部用@State isBorrowed: boolean = false</strong> 表示是否已借出。</li>
+            <li><strong>UI展示：</strong> 如果isBorrowed为true，显示红色文字“已借出”，按钮为“归还”；否则显示绿色“可借用”，按钮为“借用”。</li>
+            <li><strong>点击按钮切换状态，文字和按钮样式都要跟着变</strong>（条件渲染可以用if或者三元运算符）。</li>
+            <li><strong>在主页面引入该组件，并传props（资产名称）</strong>，做3个不同的资产卡片测试。</li>
+        </div>
+        <div class="code-block">
+            <pre>// AssetStatus.ets
+@Component
+export struct AssetStatus {
+    @State isBorrowed: boolean = false
+    private assetName: string = ''
+
+    aboutToAppear() {
+        // 假设从父组件传进来，这里用参数接收
+    }
+
+    build() {
+        Row() {
+            Text(this.assetName)
+                .fontSize(18)
+                .layoutWeight(1)
+            Button(this.isBorrowed ? '归还' : '借用')
+                .onClick(() => {
+                    this.isBorrowed = !this.isBorrowed
+                })
+                .backgroundColor(this.isBorrowed ? '#E64340' : '#28A745')
+            Text(this.isBorrowed ? '已借出' : '可借用')
+                .fontColor(this.isBorrowed ? '#E64340' : '#28A745')
+                .margin({ left: 12 })
+        }
+        .width('100%')
+        .padding(12)
+        .backgroundColor('#F5F5F5')
+        .borderRadius(16)
+        .margin({ bottom: 10 })
+    }
+}</pre>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">🔧</span> 注意：组件内部状态变化只会刷新该组件自身，不会影响其他组件，这正是@State的封装好处！</p>
+        </div>
+
+        <h3>🔧 实训三（小组挑战）：状态联动 + 总计统计（20分钟）</h3>
+        <div class="task-box">
+            <p><strong>升级任务：</strong> 在主页维护一个资产列表（数组），每个资产包含名字和是否借出。实现以下功能：</p>
+            <ol>
+                <li>点击“借用/归还”时，同时更新父组件中的状态（使用@Link或@Event回调，今天先教@Event回调方式）。</li>
+                <li>在页面顶部显示“已借出资产数量: X”。</li>
+                <li>每借出一个，总计数字增加；归还则减少。</li>
+            </ol>
+            <p><strong>提示：</strong> 父组件定义一个方法 updateBorrowStatus(index, newStatus)，通过参数传递给子组件。子组件点击时调用该方法。</p>
+            <div class="code-block">
+                <pre>// 父组件部分代码示例
+@State assets: AssetItem[] = [
+    { name: '笔记本电脑', borrowed: false },
+    { name: '投影仪', borrowed: false },
+    { name: 'RFID读写器', borrowed: true }
+]
+
+getBorrowedCount(): number {
+    return this.assets.filter(item => item.borrowed).length
+}
+
+updateBorrow(index: number, newStatus: boolean) {
+    this.assets[index].borrowed = newStatus
+    // @State数组项变化也会触发UI刷新
+}</pre>
+            </div>
+        </div>
+        <div class="step-guide">
+            <li><strong>分组讨论方案</strong>，在15分钟内实现父组件统计功能。</li>
+            <li><strong>每组派一名代表演示</strong>，老师点评并给出优化建议（例如使用@Observed和@ObjectLink，下节课学）。</li>
+        </div>
+    </div>
+
+    <!-- ========= 互动活动 ========= -->
+    <div class="section">
+        <h2>🎮 互动活动 · 状态改造接力赛</h2>
+        <div class="task-box">
+            <h3 style="margin-top:0;">「Bug猎人 + 状态魔改」小组PK</h3>
+            <p><strong>规则：</strong></p>
+            <ol>
+                <li><strong>第一关（5分钟）：</strong> 老师故意给出一段有bug的状态代码（比如@State忘记写类型、变量未在build中使用）。每组找出所有bug并修复，第一个完全正确的组加分。</li>
+                <li><strong>第二关（10分钟）：</strong> 给定一个简单的“待办事项”UI（静态列表），要求加上@State实现点击事项时文字变灰（表示完成），再次点击恢复。考验状态切换和条件样式。</li>
+                <li><strong>第三关（5分钟）：</strong> 每组分享自己的实现思路，评选“最优雅代码”。</li>
+            </ol>
+            <div style="background:#fef3e2; padding: 16px; border-radius: 24px; margin-top: 15px;">
+                <p><strong>🏆 奖励：</strong> 获胜小组获得“状态大师”称号 + 平时分奖励，优秀代码将作为全班范例。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========= 课堂小结 & 课后任务 ========= -->
+    <div class="section">
+        <h2>📝 课堂小结 & 课后升级任务</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h4>✨ 这节课我们解锁了</h4>
+                <ul style="margin-left: 1.2rem;">
+                    <li>✅ @State装饰器：让普通变量变成响应式状态</li>
+                    <li>✅ 声明式UI思维：状态改变 → UI自动刷新</li>
+                    <li>✅ 计数器 + 资产借用切换两个实战案例</li>
+                    <li>✅ 状态提升与简单父子通信（回调方式）</li>
+                    <li>✅ 小组协作完成统计功能</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>📂 课后必做任务（30分钟内）</h4>
+                <ul>
+                    <li>📌 任务1：完善“资产借用统计”项目，增加一个“全部归还”按钮，一键将所有资产状态设为未借出。</li>
+                    <li>📌 任务2：写一个“开关灯”小组件，用@State控制背景色和文本（亮色/暗色模式切换）。</li>
+                    <li>📌 任务3：预习@Prop和@Link文档，思考：如果多个组件需要共享同一个状态，应该怎么做？</li>
+                    <li>🌟 挑战任务：为资产列表增加“新增资产”功能（弹窗输入资产名），动态添加新资产（提示：数组push也会触发刷新）。</li>
+                </ul>
+            </div>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">🔔</span> 下节课（第4周 周一第1-2节）我们将学习 <strong>@Prop与@Link组件通信</strong>，实现更优雅的资产管理系统。记得提前安装好DevEco Studio，带好充电器！</p>
+            <p>🏁 状态管理是鸿蒙应用的核心，掌握它，你的App就有了“灵魂”！</p>
+        </div>
+    </div>
+
+    <!-- 导出Word按钮 -->
+    <div class="btn-group">
+        <button class="button" onclick="exportToWord()">📥 导出Word教案（状态管理·@State）</button>
+    </div>
+    <footer>
+        ⚡ 本教案强调“手把手编码+小组协作”，确保每位同学都能独立写出@State应用。<br>
+        🧑‍🏫 教师可依据学生进度适当调整挑战环节，重点让每个学生都体验到“数据驱动UI”的乐趣。
+    </footer>
+</div>
+
+<script>
+    function exportToWord() {
+        // 获取当前页面的完整html结构
+        let docHtml = document.documentElement.cloneNode(true);
+        // 移除导出按钮事件避免递归，保留样式
+        let btnGroup = docHtml.querySelector('.btn-group');
+        if(btnGroup) btnGroup.style.display = 'none';
+        let htmlContent = '<!DOCTYPE html>\n' + docHtml.outerHTML;
+        const blob = new Blob([htmlContent], { type: 'application/msword' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.download = '教案017_第3周_状态管理_@State装饰器.doc';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        alert('教案Word文档已生成，请查收下载文件夹！\n文件名：教案017_第3周_状态管理_@State装饰器.doc');
+    }
+</script>
+</body>
+</html>

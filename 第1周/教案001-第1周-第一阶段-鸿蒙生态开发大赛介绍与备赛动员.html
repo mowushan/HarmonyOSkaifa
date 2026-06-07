@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教案001：鸿蒙生态开发大赛介绍与备赛动员</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
+            line-height: 1.65;
+            color: #1f2d3a;
+            background-color: #f0f6fc;
+            padding: 30px 20px;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px rgba(0, 40, 60, 0.1);
+            overflow: hidden;
+            padding: 30px 35px 50px;
+        }
+        h1 {
+            font-size: 2.4rem;
+            background: linear-gradient(135deg, #0a2e4a, #0078d4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-align: center;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            background: #e9f2fa;
+            display: inline-block;
+            width: auto;
+            margin: 0 auto 20px;
+            padding: 8px 28px;
+            border-radius: 60px;
+            color: #0066a0;
+            font-weight: 500;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .header-meta {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            background: #eef3fc;
+            padding: 12px 20px;
+            border-radius: 40px;
+            margin: 20px 0 30px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #004d7a;
+            border: 1px solid #cde0ef;
+        }
+        .section {
+            background: white;
+            border-radius: 28px;
+            margin-bottom: 35px;
+            padding: 0 5px;
+        }
+        h2 {
+            font-size: 1.8rem;
+            color: #0a4b6e;
+            border-left: 8px solid #0078d4;
+            padding-left: 20px;
+            margin: 30px 0 20px 0;
+            background: linear-gradient(to right, #f0f8ff, #ffffff);
+            border-radius: 0 20px 20px 0;
+        }
+        h3 {
+            font-size: 1.45rem;
+            margin: 25px 0 12px 0;
+            color: #1f6392;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px dotted #b9d9f0;
+            padding-bottom: 8px;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 18px 20px;
+            border: 1px solid #dcecf5;
+            box-shadow: 0 6px 14px rgba(0, 40, 60, 0.05);
+            transition: all 0.2s;
+        }
+        .card:hover {
+            border-color: #0078d4;
+            box-shadow: 0 12px 22px rgba(0, 120, 212, 0.12);
+        }
+        .card h4 {
+            font-size: 1.35rem;
+            color: #005a9c;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 4px solid #0078d4;
+            padding-left: 14px;
+        }
+        .badge {
+            background: #0078d4;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 10px;
+            border-radius: 30px;
+            font-weight: normal;
+            margin-left: 8px;
+        }
+        .task-box {
+            background: #f0f9fe;
+            border-left: 6px solid #28a745;
+            padding: 18px 24px;
+            border-radius: 24px;
+            margin: 20px 0;
+        }
+        .important-note {
+            background: #fff8e7;
+            border-left: 6px solid #ff9800;
+            padding: 18px 24px;
+            border-radius: 24px;
+            margin: 20px 0;
+        }
+        .code-block {
+            background: #1e2f3c;
+            color: #e0f2fe;
+            padding: 16px 22px;
+            border-radius: 20px;
+            font-family: 'JetBrains Mono', 'Cascadia Code', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 5px solid #0078d4;
+        }
+        .step-guide {
+            background: #f8fafd;
+            border-radius: 28px;
+            padding: 20px 28px;
+            counter-reset: step-counter;
+            list-style: none;
+        }
+        .step-guide li {
+            counter-increment: step-counter;
+            margin-bottom: 20px;
+            padding-left: 52px;
+            position: relative;
+            font-weight: 500;
+        }
+        .step-guide li::before {
+            content: counter(step-counter);
+            background: #0078d4;
+            color: white;
+            width: 34px;
+            height: 34px;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            left: 0;
+            top: -2px;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px 0 20px;
+        }
+        .button {
+            background: linear-gradient(95deg, #0078d4, #005a9e);
+            border: none;
+            color: white;
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 5px 12px rgba(0, 90, 158, 0.3);
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(95deg, #008ae6, #006bb3);
+            box-shadow: 0 10px 20px rgba(0, 90, 158, 0.4);
+        }
+        .tip-icon {
+            font-size: 1.4rem;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #6f8ea3;
+            border-top: 1px solid #d4e2ef;
+            padding-top: 25px;
+            margin-top: 35px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        th {
+            background: #0078d4;
+            color: white;
+            padding: 10px;
+            font-weight: 600;
+        }
+        td {
+            border: 1px solid #cfdfec;
+            padding: 10px;
+        }
+        @media (max-width: 680px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.9rem; }
+        }
+    
+            pre, .code-block {
+                white-space: pre-wrap !important;
+                word-wrap: break-word !important;
+                font-family: monospace !important;
+                line-height: 1.5 !important;
+            }
+        </style>
+</head>
+<body>
+<div class="container">
+    <h1>🚀 鸿蒙生态开发大赛 · 起航第一课</h1>
+    <div style="text-align: center;">
+        <span class="subtitle">🏆 以赛促学 · 人人都能成为鸿蒙开发者</span>
+    </div>
+    <div class="header-meta">
+        <span>📅 第1周 · 星期四 第5-6节 (12:30-14:00)</span>
+        <span>⏱️ 2课时 (80分钟)  |  💻 理实一体化 · 实训为主</span>
+        <span>🎯 授课对象：技师学院 · 零基础集训队</span>
+    </div>
+
+    <!-- ========= 学习目标卡片 ========= -->
+    <div class="section">
+        <h2>🎯 学习目标 · 这堂课我们要拿下什么？</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h4>📘 知识点1 <span class="badge">鸿蒙是什么</span></h4>
+                <p><strong>学到：</strong> 鸿蒙不是手机系统，而是「万物互联的超级终端」，能一次开发多设备运行。</p>
+                <p>💡 类比：鸿蒙就像一座“智能桥梁”，让手机、平板、手表、电视协同工作。</p>
+            </div>
+            <div class="card">
+                <h4>🛠️ 技能点1 <span class="badge">认识大赛</span></h4>
+                <p><strong>学会：</strong> 了解华为开发者大赛赛道、评分标准，知道什么样的作品能拿奖。</p>
+            </div>
+            <div class="card">
+                <h4>📘 知识点2 <span class="badge">备赛路线</span></h4>
+                <p><strong>学到：</strong> 我们18周的“四阶段闯关计划”：环境→界面→数据→鸿蒙特有功能+作品。</p>
+            </div>
+            <div class="card">
+                <h4>🛠️ 技能点2 <span class="badge">注册华为账号</span></h4>
+                <p><strong>学会：</strong> 注册华为开发者联盟账号，为后续学习、下载DevEco Studio做准备。</p>
+            </div>
+            <div class="card">
+                <h4>📘 知识点3 <span class="badge">数字信心</span></h4>
+                <p><strong>学到：</strong> 零基础小白也能三个月做出参赛作品！往届获奖学长从“print都报错”开始。</p>
+            </div>
+            <div class="card">
+                <h4>🛠️ 技能点3 <span class="badge">团队公约</span></h4>
+                <p><strong>学会：</strong> 制定团队学习公约，约定每周练习时间、互助制度，组建备赛小组。</p>
+            </div>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">💡</span> <strong>老师暖心提示：</strong> 今天的课堂没有写代码压力，主要是“看见未来+建立信心”，同时动手完成账号注册和团队公约，为下周编码课铺好路！</p>
+        </div>
+    </div>
+
+    <!-- ========= 知识讲解 · 有趣易懂 ========= -->
+    <div class="section">
+        <h2>🧩 知识讲解 · 鸿蒙江湖与大赛宝藏</h2>
+        
+        <h3>1. 鸿蒙（HarmonyOS）—— 不只是手机系统</h3>
+        <div class="task-box">
+            <p><span class="tip-icon">📱+💻+⌚</span> <strong>趣味小剧场：</strong> 假如你的手机在播放视频，轻轻一划，视频就能“飞”到平板上继续播放；手机上的导航，手表上自动同步路线……这就是鸿蒙“分布式”能力！</p>
+            <p><strong>三个关键词帮你记住鸿蒙：</strong></p>
+            <ul>
+                <li>🌐 <strong>全场景</strong>：一套代码，适配手机、平板、智慧屏、手表等。</li>
+                <li>🔗 <strong>超级终端</strong>：多个设备“融合”成一个虚拟大终端。</li>
+                <li>⚡ <strong>原子化服务</strong>：不用安装，即用即走（卡片体验）。</li>
+            </ul>
+            <p>📣 参加鸿蒙生态开发大赛，就是学习如何用这些酷炫能力解决生活中的问题！</p>
+        </div>
+
+        <h3>2. 华为开发者大赛 · 赛道与评分标准</h3>
+        <div class="card-grid">
+            <div class="card">
+                <h4>🏅 应用创新赛道</h4>
+                <p>基于鸿蒙开发实用App，如智慧校园、资产管理、健康助手等。我们集训队重点攻这个！</p>
+            </div>
+            <div class="card">
+                <h4>🏅 元服务赛道</h4>
+                <p>开发轻量化卡片服务，用户无需下载，轻量体验。适合做快捷工具。</p>
+            </div>
+            <div class="card">
+                <h4>🎯 评分关键点</h4>
+                <p>创新性(30%) + 鸿蒙特性应用(30%) + 完整度(20%) + 用户体验(20%)。</p>
+            </div>
+        </div>
+        <p>✅ <strong>我们的目标：</strong> 做出一个能跑在手机+平板上，具备数据管理和鸿蒙特有功能（服务卡片或分布式协同）的参赛作品，争取省级以上奖项！</p>
+
+        <h3>3. 集训队18周 · 四阶段通关地图</h3>
+         <table>
+            <thead> <tr> <th>阶段</th> <th>周次</th> <th>核心任务</th> <th>成果</th> </tr> </thead>
+            <tbody>
+                <tr> <td>🏁 第一阶段</td> <td>第1-2周</td> <td>环境搭建 + ArkTS语法</td> <td>运行第一个鸿蒙程序</td> </tr>
+                <tr> <td>🎨 第二阶段</td> <td>第3-6周</td> <td>ArkUI组件 + 界面布局</td> <td>资产录入/列表界面</td> </tr>
+                <tr> <td>💾 第三阶段</td> <td>第7-12周</td> <td>数据存储 + 网络请求</td> <td>资产数据本地+云端同步</td> </tr>
+                <tr> <td>🚀 第四阶段</td> <td>第13-18周</td> <td>服务卡片 + 分布式 + 打磨作品</td> <td>完整参赛作品+文档</td> </tr>
+            </tbody>
+        </table>
+        <div class="important-note">
+            <p><span class="tip-icon">🗺️</span> 每周4天训练（周一至周四），每天2次课。坚持跟着计划走，零基础也能变身鸿蒙开发者！</p>
+        </div>
+    </div>
+
+    <!-- ========= 超详细实训指导 ========= -->
+    <div class="section">
+        <h2>⚙️ 技能实训 · 今日动手任务清单</h2>
+        <p style="background:#e2f0fe; border-radius: 40px; padding: 8px 20px; display: inline-block; margin-bottom: 15px;">✅ 本次实训目标：完成华为账号注册、熟悉官网、制定团队公约</p>
+
+        <h3>🔧 实训一：华为开发者联盟账号注册（全员必做）</h3>
+        <div class="step-guide">
+            <li><strong>打开浏览器</strong>，访问华为开发者联盟官网：<code>https://developer.huawei.com/consumer/cn/</code></li>
+            <li><strong>点击右上角“登录”</strong>，选择“注册”。按提示输入手机号或邮箱，获取验证码，设置密码。</li>
+            <li><strong>实名认证（可选，建议老师协助）</strong>：若学生已满16岁可用身份证实名，未满可由老师统一辅助认证。集训队可以先用账号，后续统一补充。</li>
+            <li><strong>登录成功后</strong>，在个人中心找到“我的应用”或“开发服务”，确认可以访问“AppGallery Connect”等模块。</li>
+            <li><strong>📸 截图打卡：</strong> 把登录成功的页面截图，发到集训队群，老师一一核对。</li>
+        </div>
+        <div class="task-box">
+            <p>💡 <strong>为什么必须注册？</strong> 下载DevEco Studio、查阅开发文档、将来上架应用都需要华为账号。现在注册，下节课直接开练！</p>
+        </div>
+
+        <h3>🔧 实训二：探索鸿蒙官方资源 · 发现宝藏</h3>
+        <div class="step-guide">
+            <li>打开华为开发者学堂：<code>https://developer.huawei.com/consumer/cn/training/</code></li>
+            <li>在搜索框输入“<strong>鸿蒙第一课</strong>”，找到免费课程并添加到“我的学习”。</li>
+            <li>找到“Codelabs”标签页，浏览一下“<strong>构建你的第一个HarmonyOS应用</strong>”的简介（不用真做，只是熟悉入口）。</li>
+            <li><strong>📌 小组任务：</strong> 2人一组，互相讨论“你觉得鸿蒙能做什么有趣的应用？” 每组写一个点子（比如：教室座位管理系统、设备巡检助手）并写在便利贴上，课代表收集。</li>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">📚</span> 华为开发者学堂是我们最重要的免费学习平台，所有官方视频、Codelabs都在这里。下节课我们将从这里开始第一个代码实战！</p>
+        </div>
+
+        <h3>🔧 实训三：组建备赛战队 & 制定团队公约</h3>
+        <div class="card-grid">
+            <div class="card">
+                <h4>👥 战队组建（3-4人/组）</h4>
+                <p>原则：组长1名（负责督促进度），技术员2名，文档员1名。建议性格互补，最好有“代码狂热分子”+“细心整理员”。</p>
+            </div>
+            <div class="card">
+                <h4>📜 团队公约（共创）</h4>
+                <p>1. 每周至少线下讨论2次；<br>2. 每日代码上传Git（后续教）；<br>3. 遇到bug先自己尝试解决10分钟，再求助组员；<br>4. 互相鼓励，不嘲笑“小白问题”。</p>
+            </div>
+        </div>
+        <div class="step-guide">
+            <li><strong>分组讨论（15分钟）：</strong> 各组内自我介绍，推选组长，给战队起名（如“鸿蒙先锋队”、“星河舰队”）。</li>
+            <li><strong>共同写下公约：</strong> 用手机便签或纸笔记录3-5条团队规则，组长在班级群里上传。</li>
+            <li><strong>宣誓仪式：</strong> 每组组长上台介绍战队名和公约，全班互相监督。</li>
+        </div>
+        <div class="task-box">
+            <p><span class="tip-icon">🎉</span> 老师巡场：确保每位同学都有账号，并加入集训队班级群（企业微信/钉钉）。约定好每周作业提醒方式。</p>
+        </div>
+
+        <h3>🔧 实训四（拓展）：开发环境预览 · 下载DevEco Studio（可选）</h3>
+        <div class="important-note">
+            <p><span class="tip-icon">💻</span> 如果教室网络条件允许，可以直接下载DevEco Studio安装包（windows版），下节课直接安装。</p>
+            <p><strong>下载指引：</strong> 华为开发者联盟官网 → 开发 → DevEco Studio → 下载Windows版本（约1.2GB）。</p>
+            <p>👉 无法下载的同学也不用担心，老师会把安装包共享到班级网盘，下节课统一安装。</p>
+        </div>
+    </div>
+
+    <!-- ========= 互动活动 · 竞赛动员 ========= -->
+    <div class="section">
+        <h2>🎮 互动活动 · 鸿蒙梦想发布会</h2>
+        <div class="task-box">
+            <h3 style="margin-top:0;">「我的第一个鸿蒙创意」2分钟路演</h3>
+            <p><strong>活动流程：</strong></p>
+            <ol>
+                <li>各小组讨论并完善一个鸿蒙应用创意（可以围绕校园生活、实训设备管理、智能家居等）。</li>
+                <li>每组派一位“产品经理”上台，用2分钟介绍创意：<strong>“解决什么痛点+鸿蒙哪个特性会惊艳评委”。</strong></li>
+                <li>全班投票，选出“最佳脑洞奖”、“最具落地奖”、“最炫鸿蒙特性奖”。</li>
+            </ol>
+            <div style="background:#fef3e2; padding: 16px; border-radius: 24px; margin-top: 15px;">
+                <p><strong>🏆 奖项设置：</strong> 获奖小组获得团队积分+鸿蒙周边小礼品（贴纸/定制笔）。</p>
+                <p><strong>范例引导：</strong> “资产管理系统+服务卡片：在手机桌面直接看到总资产金额，点击卡片快速录入新设备，利用分布式让平板查看图表。” —— 既实用又有鸿蒙特性！</p>
+            </div>
+        </div>
+        <p><span class="tip-icon">💬</span> 老师点评：鼓励每个创意，强调“哪怕现在觉得难，三个月后都能实现！” 激发备赛热情。</p>
+    </div>
+
+    <!-- ========= 课堂总结 & 课后任务 ========= -->
+    <div class="section">
+        <h2>📝 课堂小结 & 课后能量包</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h4>✨ 这节课我们解锁了</h4>
+                <ul style="margin-left: 1.2rem;">
+                    <li>✅ 鸿蒙不只是手机系统，是万物互联的超级终端</li>
+                    <li>✅ 大赛规则 + 四阶段备赛地图</li>
+                    <li>✅ 注册华为开发者账号，找到学习资源入口</li>
+                    <li>✅ 组建战队，制定团队公约</li>
+                    <li>✅ 种下创意种子，对大赛充满期待</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>📂 课后必做任务（30分钟内）</h4>
+                <ul>
+                    <li>📌 任务1：确认华为账号可正常登录，加入班级学习小组群。</li>
+                    <li>📌 任务2：观看《鸿蒙第一课》前两节视频（总时长>20分钟），在群里打卡“已看完+一个小收获”。</li>
+                    <li>📌 任务3：小组内讨论，完善创意，下周提交一页PPT（含草图）。</li>
+                    <li>🌟 挑战任务：提前预习“ArkTS基本语法”，了解let、const。</li>
+                </ul>
+            </div>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">🔔</span> 下节课（第1周 周四第9-10节 15:50-17:20）我们将实战：<strong>安装DevEco Studio + 创建第一个HarmonyOS应用（Hello World）！</strong> 记得带电脑或提前安装好软件。</p>
+            <p>🏁 备赛宣言：相信过程，动手为王。从今天起，我们都是鸿蒙开发者！</p>
+        </div>
+    </div>
+
+    <!-- 导出Word按钮 -->
+    <div class="btn-group">
+        <button class="button" onclick="exportToWord()">📥 导出Word教案（鸿蒙第一课）</button>
+    </div>
+    <footer>
+        ⚡ 本教案融合“以赛促学”理念，兼顾趣味性与实操，适合零基础集训队。<br>
+        🧑‍🏫 教师可根据课堂氛围适当延长创意展示环节，重点在于点燃学生参赛热情。
+    </footer>
+</div>
+
+<script>
+    function exportToWord() {
+        // 获取当前页面的完整html结构
+        let docHtml = document.documentElement.cloneNode(true);
+        // 移除导出按钮事件避免递归，保留样式
+        let btnGroup = docHtml.querySelector('.btn-group');
+        if(btnGroup) btnGroup.style.display = 'none';
+        let htmlContent = '<!DOCTYPE html>\n' + docHtml.outerHTML;
+        const blob = new Blob([htmlContent], { type: 'application/msword' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.download = '教案001_鸿蒙生态大赛介绍与备赛动员.doc';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        alert('教案Word文档已生成，请查收下载文件夹！\n文件名：教案001_鸿蒙生态大赛介绍与备赛动员.doc');
+    }
+</script>
+</body>
+</html>
