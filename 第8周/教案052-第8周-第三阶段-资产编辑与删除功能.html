@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教案052：资产编辑与删除功能 · 让数据管理活起来</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
+            line-height: 1.65;
+            color: #1f2d3a;
+            background-color: #f0f6fc;
+            padding: 30px 20px;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px rgba(0, 40, 60, 0.1);
+            overflow: hidden;
+            padding: 30px 35px 50px;
+        }
+        h1 {
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, #0a2e4a, #0078d4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 1rem;
+            background: #e9f2fa;
+            display: inline-block;
+            width: auto;
+            margin: 0 auto 20px;
+            padding: 6px 24px;
+            border-radius: 60px;
+            color: #0066a0;
+            font-weight: 500;
+        }
+        .header-meta {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            background: #eef3fc;
+            padding: 12px 20px;
+            border-radius: 40px;
+            margin: 20px 0 30px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #004d7a;
+            border: 1px solid #cde0ef;
+        }
+        .section {
+            background: white;
+            border-radius: 28px;
+            margin-bottom: 35px;
+            padding: 0 5px;
+        }
+        h2 {
+            font-size: 1.7rem;
+            color: #0a4b6e;
+            border-left: 8px solid #0078d4;
+            padding-left: 20px;
+            margin: 30px 0 20px 0;
+            background: linear-gradient(to right, #f0f8ff, #ffffff);
+            border-radius: 0 20px 20px 0;
+        }
+        h3 {
+            font-size: 1.4rem;
+            margin: 25px 0 12px 0;
+            color: #1f6392;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px dotted #b9d9f0;
+            padding-bottom: 8px;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 18px 20px;
+            border: 1px solid #dcecf5;
+            box-shadow: 0 6px 14px rgba(0, 40, 60, 0.05);
+            transition: all 0.2s;
+        }
+        .card:hover {
+            border-color: #0078d4;
+            box-shadow: 0 12px 22px rgba(0, 120, 212, 0.12);
+        }
+        .card h4 {
+            font-size: 1.3rem;
+            color: #005a9c;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 4px solid #0078d4;
+            padding-left: 14px;
+        }
+        .badge {
+            background: #0078d4;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 10px;
+            border-radius: 30px;
+            font-weight: normal;
+            margin-left: 8px;
+        }
+        .task-box {
+            background: #f0f9fe;
+            border-left: 6px solid #28a745;
+            padding: 18px 24px;
+            border-radius: 24px;
+            margin: 20px 0;
+        }
+        .important-note {
+            background: #fff8e7;
+            border-left: 6px solid #ff9800;
+            padding: 18px 24px;
+            border-radius: 24px;
+            margin: 20px 0;
+        }
+        .code-block {
+            background: #1e2f3c;
+            color: #e0f2fe;
+            padding: 16px 22px;
+            border-radius: 20px;
+            font-family: 'JetBrains Mono', 'Cascadia Code', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 5px solid #0078d4;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .code-block pre {
+            margin: 0;
+            font-family: inherit;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .step-guide {
+            background: #f8fafd;
+            border-radius: 28px;
+            padding: 20px 28px;
+            counter-reset: step-counter;
+            list-style: none;
+        }
+        .step-guide li {
+            counter-increment: step-counter;
+            margin-bottom: 20px;
+            padding-left: 52px;
+            position: relative;
+            font-weight: 500;
+        }
+        .step-guide li::before {
+            content: counter(step-counter);
+            background: #0078d4;
+            color: white;
+            width: 34px;
+            height: 34px;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            left: 0;
+            top: -2px;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px 0 20px;
+        }
+        .button {
+            background: linear-gradient(95deg, #0078d4, #005a9e);
+            border: none;
+            color: white;
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 5px 12px rgba(0, 90, 158, 0.3);
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(95deg, #008ae6, #006bb3);
+        }
+        .tip-icon {
+            font-size: 1.3rem;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #6f8ea3;
+            border-top: 1px solid #d4e2ef;
+            padding-top: 25px;
+            margin-top: 35px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        th {
+            background: #0078d4;
+            color: white;
+            padding: 10px;
+            font-weight: 600;
+        }
+        td {
+            border: 1px solid #cfdfec;
+            padding: 10px;
+        }
+        @media (max-width: 680px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>✏️ 资产编辑与删除功能 · 让数据管理活起来</h1>
+    <div style="text-align: center;">
+        <span class="subtitle">🏗️ 实现资产的修改、删除操作 · 完善资产管理核心逻辑</span>
+    </div>
+    <div class="header-meta">
+        <span>📅 第8周 · 星期一 第9-10节 (15:50-17:20)</span>
+        <span>⏱️ 2课时 (80分钟)  |  💻 理实一体化 · 编码实战</span>
+        <span>🎯 授课对象：技师学院 · 鸿蒙集训队</span>
+    </div>
+
+    <!-- ========= 学习目标卡片 ========= -->
+    <div class="section">
+        <h2>🎯 学习目标 · 这堂课我们要拿下什么？</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h4>📘 知识点1 <span class="badge">编辑数据流程</span></h4>
+                <p><strong>学到：</strong> 理解从列表页跳转到编辑页 → 传递数据 → 修改 → 保存回数据库的完整流程。</p>
+            </div>
+            <div class="card">
+                <h4>🛠️ 技能点1 <span class="badge">实现编辑功能</span></h4>
+                <p><strong>学会：</strong> 编写编辑页面，接收参数，更新数据库中的资产记录。</p>
+            </div>
+            <div class="card">
+                <h4>📘 知识点2 <span class="badge">删除数据机制</span></h4>
+                <p><strong>学到：</strong> 软删除 vs 物理删除，如何弹出确认对话框防止误删。</p>
+            </div>
+            <div class="card">
+                <h4>🛠️ 技能点2 <span class="badge">实现删除功能</span></h4>
+                <p><strong>学会：</strong> 在列表中为每条数据添加删除按钮，调用数据库删除操作并刷新列表。</p>
+            </div>
+            <div class="card">
+                <h4>📘 知识点3 <span class="badge">数据一致性</span></h4>
+                <p><strong>学到：</strong> 编辑/删除后如何保持列表页数据同步更新。</p>
+            </div>
+            <div class="card">
+                <h4>🛠️ 技能点3 <span class="badge">页面路由传参</span></h4>
+                <p><strong>学会：</strong> 使用路由跳转时传递对象参数，并在新页面接收。</p>
+            </div>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">💡</span> <strong>老师暖心提示：</strong> 编辑和删除是资产管理系统的核心交互功能。完成今天的课程后，你的资产管理系统就具备完整的增删改查能力了！</p>
+        </div>
+    </div>
+
+    <!-- ========= 知识讲解 ========= -->
+    <div class="section">
+        <h2>🧩 知识讲解 · 编辑与删除的核心原理</h2>
+        
+        <h3>1. 编辑功能 · 三步走</h3>
+        <div class="task-box">
+            <p><span class="tip-icon">✏️</span> <strong>编辑的本质：</strong> 把选中的数据显示到编辑表单 → 用户修改 → 保存更新到数据库。</p>
+            <p><strong>实现步骤：</strong></p>
+            <ol>
+                <li><strong>列表页跳转：</strong> 点击“编辑”按钮，携带资产对象跳转到编辑页。</li>
+                <li><strong>编辑页接收数据：</strong> 通过路由参数获取要编辑的资产信息，填充到输入框。</li>
+                <li><strong>保存修改：</strong> 用户点击保存，调用数据库更新方法，更新成功后返回列表页并刷新。</li>
+            </ol>
+        </div>
+        <div class="code-block">
+            <pre>// 列表页跳转到编辑页（携带参数）
+router.pushUrl({
+    url: 'pages/AssetEdit',
+    params: { asset: currentAsset }
+})
+
+// 编辑页接收参数
+import router from '@ohos.router';
+onPageShow() {
+    const params = router.getParams();
+    if (params && params.asset) {
+        this.asset = params.asset;
+        this.name = this.asset.name;
+        this.price = this.asset.price.toString();
+    }
+}</pre>
+        </div>
+
+        <h3>2. 删除功能 · 安全第一</h3>
+        <div class="important-note">
+            <p><span class="tip-icon">🗑️</span> <strong>删除原则：</strong> 必须二次确认！使用系统弹窗让用户再次确认是否删除。</p>
+            <p><strong>实现要点：</strong></p>
+            <ul>
+                <li>在列表项上添加“删除”按钮。</li>
+                <li>点击时弹出 AlertDialog 确认框。</li>
+                <li>用户确认后，调用数据库删除方法。</li>
+                <li>删除成功后刷新列表数据。</li>
+            </ul>
+        </div>
+        <div class="code-block">
+            <pre>// 删除确认弹窗
+AlertDialog.show({
+    title: '确认删除',
+    message: '确定要删除这项资产吗？删除后无法恢复！',
+    primaryButton: {
+        value: '取消',
+        action: () => {}
+    },
+    secondaryButton: {
+        value: '确认删除',
+        action: () => {
+            this.deleteAsset(id);
+        }
+    }
+});</pre>
+        </div>
+
+        <h3>3. 数据同步刷新技巧</h3>
+        <div class="task-box">
+            <p><span class="tip-icon">🔄</span> 编辑或删除后，返回列表页时如何自动刷新？</p>
+            <p><strong>两种常用方法：</strong></p>
+            <ul>
+                <li><strong>方法一：</strong> 在列表页的 <code>onPageShow()</code> 生命周期中重新加载数据。</li>
+                <li><strong>方法二：</strong> 使用事件总线（EventHub）通知列表页刷新。</li>
+            </ul>
+            <p>今天我们先使用方法一，简单又可靠！</p>
+        </div>
+        <div class="code-block">
+            <pre>// 列表页：每次页面显示时重新加载数据
+onPageShow() {
+    this.loadAssetList();  // 重新查询数据库
+}</pre>
+        </div>
+    </div>
+
+    <!-- ========= 超详细实训指导 ========= -->
+    <div class="section">
+        <h2>⚙️ 技能实训 · 动手实现编辑与删除</h2>
+        <p style="background:#e2f0fe; border-radius: 40px; padding: 8px 20px; display: inline-block; margin-bottom: 15px;">✅ 本次实训目标：让资产管理系统支持编辑和删除操作</p>
+
+        <h3>📁 准备工作</h3>
+        <div class="task-box">
+            <p>1. 打开 DevEco Studio，打开之前的资产管理系统项目。</p>
+            <p>2. 确保项目可以正常运行，资产列表页能正常显示数据。</p>
+            <p>3. 如果还没有数据库操作类，先创建好 <code>AssetDatabase.ets</code>，包含增删改查方法。</p>
+        </div>
+
+        <h3>🔧 实训一：创建编辑页面（15分钟）</h3>
+        <div class="step-guide">
+            <li><strong>新建编辑页面文件：</strong> 在 <code>pages</code> 目录下新建 <code>AssetEdit.ets</code>。</li>
+            <li><strong>设计编辑界面：</strong> 包含名称输入框、价格输入框、保存按钮和返回按钮。</li>
+            <li><strong>接收路由参数：</strong> 在页面中获取传递过来的资产对象，并将数据绑定到输入框。</li>
+            <li><strong>编写保存逻辑：</strong> 调用数据库更新方法，更新成功后返回上一页。</li>
+        </div>
+        <div class="code-block">
+            <pre>// AssetEdit.ets 完整代码示例
+import router from '@ohos.router';
+import { AssetDatabase } from '../database/AssetDatabase';
+
+@Entry
+@Component
+struct AssetEdit {
+    @State assetId: number = 0;
+    @State name: string = '';
+    @State price: string = '';
+    private db: AssetDatabase = new AssetDatabase();
+
+    aboutToAppear() {
+        const params = router.getParams();
+        if (params && params['asset']) {
+            const asset = params['asset'] as Record&lt;string, Object&gt;;
+            this.assetId = asset['id'] as number;
+            this.name = asset['name'] as string;
+            this.price = String(asset['price']);
+        }
+    }
+
+    async saveAsset() {
+        if (!this.name.trim()) {
+            promptAction.showToast({ message: '请输入资产名称' });
+            return;
+        }
+        const priceNum = parseFloat(this.price);
+        if (isNaN(priceNum)) {
+            promptAction.showToast({ message: '请输入正确的价格' });
+            return;
+        }
+        await this.db.updateAsset(this.assetId, this.name, priceNum);
+        router.back();
+    }
+
+    build() {
+        Column() {
+            Text('编辑资产')
+                .fontSize(24)
+                .fontWeight(FontWeight.Bold)
+                .margin(20)
+            TextInput({ placeholder: '资产名称', text: this.name })
+                .onChange((value) => { this.name = value; })
+                .margin(10)
+            TextInput({ placeholder: '资产价格', text: this.price })
+                .type(InputType.Number)
+                .onChange((value) => { this.price = value; })
+                .margin(10)
+            Button('保存修改')
+                .width('90%')
+                .onClick(() => this.saveAsset())
+                .margin(10)
+            Button('返回')
+                .width('90%')
+                .backgroundColor(Color.Gray)
+                .onClick(() => router.back())
+                .margin(10)
+        }
+        .width('100%')
+        .height('100%')
+        .justifyContent(FlexAlign.Center)
+    }
+}</pre>
+        </div>
+
+        <h3>🔧 实训二：在列表页添加编辑和删除按钮（20分钟）</h3>
+        <div class="step-guide">
+            <li><strong>修改列表项布局：</strong> 在每条资产数据的展示中，增加“编辑”和“删除”两个按钮。</li>
+            <li><strong>实现编辑跳转：</strong> 点击编辑时，携带当前资产对象跳转到编辑页。</li>
+            <li><strong>实现删除确认：</strong> 点击删除时弹出确认对话框，确认后调用删除方法。</li>
+            <li><strong>实现删除方法：</strong> 调用数据库删除，然后刷新列表。</li>
+        </div>
+        <div class="code-block">
+            <pre>// 列表页中修改 build() 方法，添加操作按钮
+ForEach(this.assetList, (item: Asset) => {
+    Row() {
+        Column() {
+            Text(item.name).fontSize(18)
+            Text(`¥${item.price}`).fontSize(14).fontColor(Color.Gray)
+        }
+        .alignItems(HorizontalAlign.Start)
+        
+        Blank()
+        
+        Row() {
+            Button('编辑')
+                .fontSize(14)
+                .backgroundColor('#2196F3')
+                .onClick(() => {
+                    router.pushUrl({
+                        url: 'pages/AssetEdit',
+                        params: { asset: item }
+                    });
+                })
+            Button('删除')
+                .fontSize(14)
+                .backgroundColor('#f44336')
+                .onClick(() => {
+                    AlertDialog.show({
+                        title: '确认删除',
+                        message: `确定要删除「${item.name}」吗？`,
+                        primaryButton: {
+                            value: '取消',
+                            action: () => {}
+                        },
+                        secondaryButton: {
+                            value: '删除',
+                            action: async () => {
+                                await this.db.deleteAsset(item.id);
+                                this.loadAssetList();  // 刷新列表
+                            }
+                        }
+                    });
+                })
+        }
+        .spacing(10)
+    }
+    .width('100%')
+    .padding(12)
+    .justifyContent(FlexAlign.SpaceBetween)
+})</pre>
+        </div>
+
+        <h3>🔧 实训三：完善数据库操作类（15分钟）</h3>
+        <div class="step-guide">
+            <li><strong>添加更新方法：</strong> 在 AssetDatabase 中添加 updateAsset 方法。</li>
+            <li><strong>添加删除方法：</strong> 添加 deleteAsset 方法。</li>
+            <li><strong>测试验证：</strong> 确保编辑和删除后数据正确更新。</li>
+        </div>
+        <div class="code-block">
+            <pre>// AssetDatabase.ets 新增方法
+async updateAsset(id: number, name: string, price: number): Promise&lt;boolean&gt; {
+    let result = await this.store?.update(
+        "UPDATE asset SET name = ?, price = ? WHERE id = ?",
+        [name, price, id]
+    );
+    return result !== undefined && result.changes > 0;
+}
+
+async deleteAsset(id: number): Promise&lt;boolean&gt; {
+    let result = await this.store?.delete("DELETE FROM asset WHERE id = ?", [id]);
+    return result !== undefined && result.changes > 0;
+}</pre>
+        </div>
+
+        <h3>🔧 实训四：列表页自动刷新（10分钟）</h3>
+        <div class="step-guide">
+            <li><strong>添加 onPageShow 生命周期：</strong> 在列表页组件中添加此方法。</li>
+            <li><strong>重新加载数据：</strong> 每次页面显示时重新查询数据库。</li>
+            <li><strong>测试效果：</strong> 编辑或删除后返回列表页，数据自动刷新。</li>
+        </div>
+        <div class="code-block">
+            <pre>// 列表页添加自动刷新
+onPageShow() {
+    this.loadAssetList();  // 重新加载数据
+}
+
+async loadAssetList() {
+    this.assetList = await this.db.getAllAssets();
+}</pre>
+        </div>
+
+        <div class="important-note">
+            <p><span class="tip-icon">🎉</span> <strong>完成标志：</strong> 你的资产管理系统现在支持：新增、查看、编辑、删除！已经是一个完整的 CRUD 应用了！</p>
+        </div>
+    </div>
+
+    <!-- ========= 互动活动 ========= -->
+    <div class="section">
+        <h2>🎮 互动活动 · 找Bug接力赛</h2>
+        <div class="task-box">
+            <h3 style="margin-top:0;">「编辑删除大挑战」</h3>
+            <p><strong>活动流程：</strong></p>
+            <ol>
+                <li>每组交换代码（或互相演示），检查对方的编辑/删除功能是否有Bug。</li>
+                <li>常见Bug清单：编辑保存后列表不刷新、删除没有确认框、价格输入允许负数等。</li>
+                <li>每组找出至少2个潜在问题，并帮助对方修复。</li>
+                <li>最后评选“最佳Debug小组”。</li>
+            </ol>
+            <div style="background:#fef3e2; padding: 16px; border-radius: 24px; margin-top: 15px;">
+                <p><strong>🏆 加分点：</strong> 发现特殊Bug（如快速点击删除导致重复删除）、提出优化建议（如删除动画、撤销功能）。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========= 课堂小结 & 课后任务 ========= -->
+    <div class="section">
+        <h2>📝 课堂小结 & 课后任务</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h4>✨ 这节课我们解锁了</h4>
+                <ul style="margin-left: 1.2rem;">
+                    <li>✅ 编辑功能：路由传参 + 表单回显 + 数据库更新</li>
+                    <li>✅ 删除功能：AlertDialog确认 + 数据库删除 + 列表刷新</li>
+                    <li>✅ onPageShow 生命周期实现自动刷新</li>
+                    <li>✅ 完整的增删改查（CRUD）能力</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>📂 课后任务</h4>
+                <ul>
+                    <li>📌 任务1：完善自己的资产管理项目，确保编辑和删除功能完全正常。</li>
+                    <li>📌 任务2：给删除按钮添加“正在删除”的加载状态，防止快速重复点击。</li>
+                    <li>📌 任务3：预习“数据搜索与排序功能”，思考如何实现关键字搜索。</li>
+                    <li>🌟 挑战任务：实现“批量删除”功能（勾选多项资产后一键删除）。</li>
+                </ul>
+            </div>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">🔔</span> 下节课（第8周 · 星期二 第5-6节 12:30-14:00）我们将学习：<strong>数据搜索与排序功能</strong>，让你的资产管理系统更加强大！</p>
+            <p>🏁 项目进度提醒：下周将完成数据管理核心功能，准备进入第四阶段（鸿蒙特有功能）！</p>
+        </div>
+    </div>
+
+    <!-- 导出Word按钮 -->
+    <div class="btn-group">
+        <button class="button" onclick="exportToWord()">📥 导出Word教案（资产编辑与删除）</button>
+    </div>
+    <footer>
+        ⚡ 本教案为2课时（80分钟），包含完整代码示例和实训步骤。<br>
+        🧑‍🏫 教师可根据学生进度适当调整，重点在于让学生真正理解编辑和删除的完整流程。
+    </footer>
+</div>
+
+<script>
+    function exportToWord() {
+        let docHtml = document.documentElement.cloneNode(true);
+        let btnGroup = docHtml.querySelector('.btn-group');
+        if(btnGroup) btnGroup.style.display = 'none';
+        let htmlContent = '<!DOCTYPE html>\n' + docHtml.outerHTML;
+        const blob = new Blob([htmlContent], { type: 'application/msword' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.download = '教案052_资产编辑与删除功能.doc';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        alert('教案Word文档已生成，请查收下载文件夹！\n文件名：教案052_资产编辑与删除功能.doc');
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教案057：模拟从云端获取资产数据</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
+            line-height: 1.65;
+            color: #1f2d3a;
+            background-color: #f0f6fc;
+            padding: 30px 20px;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px rgba(0, 40, 60, 0.1);
+            overflow: hidden;
+            padding: 30px 35px 50px;
+        }
+        h1 {
+            font-size: 2.4rem;
+            background: linear-gradient(135deg, #0a2e4a, #0078d4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-align: center;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            background: #e9f2fa;
+            display: inline-block;
+            width: auto;
+            margin: 0 auto 20px;
+            padding: 8px 28px;
+            border-radius: 60px;
+            color: #0066a0;
+            font-weight: 500;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .header-meta {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            background: #eef3fc;
+            padding: 12px 20px;
+            border-radius: 40px;
+            margin: 20px 0 30px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #004d7a;
+            border: 1px solid #cde0ef;
+        }
+        .section {
+            background: white;
+            border-radius: 28px;
+            margin-bottom: 35px;
+            padding: 0 5px;
+        }
+        h2 {
+            font-size: 1.8rem;
+            color: #0a4b6e;
+            border-left: 8px solid #0078d4;
+            padding-left: 20px;
+            margin: 30px 0 20px 0;
+            background: linear-gradient(to right, #f0f8ff, #ffffff);
+            border-radius: 0 20px 20px 0;
+        }
+        h3 {
+            font-size: 1.45rem;
+            margin: 25px 0 12px 0;
+            color: #1f6392;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px dotted #b9d9f0;
+            padding-bottom: 8px;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 18px 20px;
+            border: 1px solid #dcecf5;
+            box-shadow: 0 6px 14px rgba(0, 40, 60, 0.05);
+            transition: all 0.2s;
+        }
+        .card:hover {
+            border-color: #0078d4;
+            box-shadow: 0 12px 22px rgba(0, 120, 212, 0.12);
+        }
+        .card h4 {
+            font-size: 1.35rem;
+            color: #005a9c;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 4px solid #0078d4;
+            padding-left: 14px;
+        }
+        .badge {
+            background: #0078d4;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 10px;
+            border-radius: 30px;
+            font-weight: normal;
+            margin-left: 8px;
+        }
+        .task-box {
+            background: #f0f9fe;
+            border-left: 6px solid #28a745;
+            padding: 18px 24px;
+            border-radius: 24px;
+            margin: 20px 0;
+        }
+        .important-note {
+            background: #fff8e7;
+            border-left: 6px solid #ff9800;
+            padding: 18px 24px;
+            border-radius: 24px;
+            margin: 20px 0;
+        }
+        .code-block {
+            background: #1e2f3c;
+            color: #e0f2fe;
+            padding: 16px 22px;
+            border-radius: 20px;
+            font-family: 'JetBrains Mono', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 5px solid #0078d4;
+            white-space: pre-wrap;
+            word-break: break-word;
+            line-height: 1.5;
+        }
+        .code-block pre {
+            margin: 0;
+            font-family: inherit;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .step-guide {
+            background: #f8fafd;
+            border-radius: 28px;
+            padding: 20px 28px;
+            counter-reset: step-counter;
+            list-style: none;
+        }
+        .step-guide li {
+            counter-increment: step-counter;
+            margin-bottom: 20px;
+            padding-left: 52px;
+            position: relative;
+            font-weight: 500;
+        }
+        .step-guide li::before {
+            content: counter(step-counter);
+            background: #0078d4;
+            color: white;
+            width: 34px;
+            height: 34px;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            left: 0;
+            top: -2px;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px 0 20px;
+        }
+        .button {
+            background: linear-gradient(95deg, #0078d4, #005a9e);
+            border: none;
+            color: white;
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 5px 12px rgba(0, 90, 158, 0.3);
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(95deg, #008ae6, #006bb3);
+            box-shadow: 0 10px 20px rgba(0, 90, 158, 0.4);
+        }
+        .tip-icon {
+            font-size: 1.4rem;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #6f8ea3;
+            border-top: 1px solid #d4e2ef;
+            padding-top: 25px;
+            margin-top: 35px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        th {
+            background: #0078d4;
+            color: white;
+            padding: 10px;
+            font-weight: 600;
+        }
+        td {
+            border: 1px solid #cfdfec;
+            padding: 10px;
+        }
+        .error-note {
+            background: #ffe8e6;
+            border-left-color: #e74c3c;
+        }
+        @media (max-width: 680px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.9rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>☁️ 云端数据魔法 · 模拟从云端获取资产数据</h1>
+    <div style="text-align: center;">
+        <span class="subtitle">🌐 网络请求实战 · 让应用拥有云端能力</span>
+    </div>
+    <div class="header-meta">
+        <span>📅 第8周 · 星期四 第5-6节 (12:30-14:00)</span>
+        <span>⏱️ 2课时 (80分钟)  |  💻 理实一体化 · 网络编程实战</span>
+        <span>🎯 授课对象：鸿蒙集训队 · 第三阶段核心功能</span>
+    </div>
+
+    <!-- ========= 学习目标卡片 ========= -->
+    <div class="section">
+        <h2>🎯 学习目标 · 这堂课我们要拿下什么？</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h4>📘 知识点1 <span class="badge">网络请求基础</span></h4>
+                <p><strong>学到：</strong> HTTP协议是什么？GET和POST的区别？鸿蒙中如何发起网络请求？</p>
+                <p>💡 类比：网络请求就像“打电话给服务器”，服务器接听后把数据“快递”回来。</p>
+            </div>
+            <div class="card">
+                <h4>🛠️ 技能点1 <span class="badge">http模块使用</span></h4>
+                <p><strong>学会：</strong> 使用鸿蒙的http模块发起GET请求，获取云端数据。</p>
+            </div>
+            <div class="card">
+                <h4>📘 知识点2 <span class="badge">JSON解析</span></h4>
+                <p><strong>学到：</strong> JSON数据格式是什么？如何将JSON字符串转成对象？</p>
+            </div>
+            <div class="card">
+                <h4>🛠️ 技能点2 <span class="badge">数据解析</span></h4>
+                <p><strong>学会：</strong> 解析服务器返回的JSON数据，提取资产列表。</p>
+            </div>
+            <div class="card">
+                <h4>📘 知识点3 <span class="badge">异步处理</span></h4>
+                <p><strong>学到：</strong> 为什么网络请求需要异步？Promise和async/await是什么？</p>
+            </div>
+            <div class="card">
+                <h4>🛠️ 技能点3 <span class="badge">错误处理</span></h4>
+                <p><strong>学会：</strong> 处理网络超时、请求失败等异常情况。</p>
+            </div>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">💡</span> <strong>老师暖心提示：</strong> 本节课是资产管理系统“云端化”的关键一步！学完这节课，你的应用就能从互联网获取数据，真正“活”起来！</p>
+        </div>
+    </div>
+
+    <!-- ========= 知识讲解 · 生动有趣 ========= -->
+    <div class="section">
+        <h2>🧩 知识讲解 · 网络请求与云端数据</h2>
+        
+        <h3>1. 什么是网络请求？—— 像点外卖一样简单</h3>
+        <div class="task-box">
+            <p><span class="tip-icon">📱</span> <strong>趣味类比：</strong> 你在手机上打开外卖App，点击“美食”按钮 → App向服务器发送请求（我要看美食列表） → 服务器把美食数据打包发回来 → App展示给你看。这就是网络请求！</p>
+            <p><strong>两个常用方法：</strong></p>
+            <ul>
+                <li>🔹 <strong>GET</strong>：向服务器“要”数据（比如获取资产列表）</li>
+                <li>🔹 <strong>POST</strong>：向服务器“提交”数据（比如新增资产）</li>
+            </ul>
+            <p>本节课我们先用GET模拟从云端获取资产数据！</p>
+        </div>
+
+        <h3>2. 鸿蒙中的网络请求 · http模块</h3>
+        <div class="code-block">
+            <pre>import http from '@ohos.net.http';
+
+// 创建HTTP请求对象
+let httpRequest = http.createHttp();
+
+// 发起GET请求
+httpRequest.request('https://api.example.com/assets', {
+    method: http.RequestMethod.GET,
+    header: { 'Content-Type': 'application/json' }
+}, (err, data) => {
+    if (err) {
+        console.error('请求失败: ' + JSON.stringify(err));
+        return;
+    }
+    console.info('请求成功: ' + data.result);
+});</pre>
+        </div>
+        <p><strong>📌 知识点拆解：</strong></p>
+        <ul>
+            <li><code>createHttp()</code>：创建一个“电话机”（HTTP客户端）</li>
+            <li><code>request()</code>：拨打电话，发送请求</li>
+            <li><code>method</code>：告诉服务器你要GET还是POST</li>
+            <li>回调函数：服务器“接电话”后的处理逻辑</li>
+        </ul>
+
+        <h3>3. JSON数据格式 —— 服务器的“通用语言”</h3>
+        <div class="card-grid">
+            <div class="card">
+                <h4>📦 JSON长什么样？</h4>
+                <div class="code-block" style="margin-top: 8px;">
+                    <pre>{
+  "code": 200,
+  "data": [
+    {"id": 1, "name": "笔记本电脑", "price": 5999},
+    {"id": 2, "name": "显示器", "price": 1299}
+  ]
+}</pre>
+                </div>
+            </div>
+            <div class="card">
+                <h4>🔧 如何解析？</h4>
+                <div class="code-block" style="margin-top: 8px;">
+                    <pre>let jsonObj = JSON.parse(jsonString);
+let assetList = jsonObj.data;
+console.log(assetList[0].name); // 输出：笔记本电脑</pre>
+                </div>
+            </div>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">⚠️</span> <strong>重要提醒：</strong> 网络请求是异步操作，就像“发微信后等回复”，代码不会停在原地等待，需要用回调或async/await处理。</p>
+        </div>
+    </div>
+
+    <!-- ========= 超详细实训指导 ========= -->
+    <div class="section">
+        <h2>⚙️ 技能实训 · 动手模拟云端获取资产数据</h2>
+        <p style="background:#e2f0fe; border-radius: 40px; padding: 8px 20px; display: inline-block; margin-bottom: 15px;">✅ 本次实训目标：成功发起网络请求，解析JSON数据，显示在资产列表中</p>
+
+        <!-- 时间安排表 -->
+        <table style="margin: 20px 0;">
+            <thead><tr><th>时间段</th><th>内容</th><th>时长</th></tr></thead>
+            <tbody>
+                <tr><td>12:30-12:50</td><td>知识讲解 + 演示</td><td>20分钟</td></tr>
+                <tr><td>12:50-13:30</td><td>实训任务一、二、三（动手编码）</td><td>40分钟</td></tr>
+                <tr><td>13:30-13:40</td><td>课间休息</td><td>10分钟</td></tr>
+                <tr><td>13:40-14:00</td><td>实训任务四（综合实战）+ 总结</td><td>20分钟</td></tr>
+            </tbody>
+        </table>
+
+        <h3>📁 准备工作</h3>
+        <div class="task-box">
+            <p>1. 打开DevEco Studio，打开我们的资产管理项目（之前已创建）。</p>
+            <p>2. 在 <code>entry/src/main/ets/pages</code> 目录下，新建一个文件 <code>CloudAssetsPage.ets</code>（云端资产页面）。</p>
+            <p>3. 确保手机/模拟器已连接，并且网络正常。</p>
+            <p>⚠️ 如果使用模拟器，模拟器默认可以访问电脑的网络，不需要额外配置。</p>
+        </div>
+
+        <h3>🧪 实训任务一：配置网络权限（5分钟）</h3>
+        <div class="step-guide">
+            <li>打开 <code>entry/src/main/module.json5</code> 文件。</li>
+            <li>在 <code>module</code> 节点下添加网络权限：</li>
+        </div>
+        <div class="code-block">
+            <pre>"requestPermissions": [
+  {
+    "name": "ohos.permission.INTERNET",
+    "reason": "需要访问网络获取云端资产数据",
+    "usedScene": {
+      "abilities": ["EntryAbility"],
+      "when": "inuse"
+    }
+  }
+]</pre>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">🔐</span> 鸿蒙应用默认不能访问网络，必须申请权限！这是为了保护用户隐私和安全。</p>
+        </div>
+
+        <h3>🧪 实训任务二：模拟云端API（准备假数据）</h3>
+        <div class="task-box">
+            <p>由于我们还没有真正的后端服务器，本节课先用一个<strong>在线模拟API</strong>：<code>https://jsonplaceholder.typicode.com/posts</code>（这是一个免费的测试接口，返回假数据）。</p>
+            <p>后续我们会自己搭建模拟服务或使用真实后端。</p>
+        </div>
+
+        <h3>🧪 实训任务三：编写网络请求代码（30分钟）</h3>
+        <div class="step-guide">
+            <li>在 <code>CloudAssetsPage.ets</code> 中编写页面结构。</li>
+            <li>导入http模块：<code>import http from '@ohos.net.http';</code></li>
+            <li>编写请求函数，获取数据并解析。</li>
+        </div>
+        <div class="code-block">
+            <pre>import http from '@ohos.net.http';
+import router from '@ohos.router';
+
+@Entry
+@Component
+struct CloudAssetsPage {
+  @State assetList: Array&lt;AssetItem&gt; = [];
+  @State isLoading: boolean = false;
+
+  aboutToAppear() {
+    this.fetchAssetsFromCloud();
+  }
+
+  async fetchAssetsFromCloud() {
+    this.isLoading = true;
+    let httpRequest = http.createHttp();
+    
+    try {
+      let response = await httpRequest.request(
+        'https://jsonplaceholder.typicode.com/posts',
+        {
+          method: http.RequestMethod.GET,
+          connectTimeout: 10000,
+          readTimeout: 10000,
+          header: { 'Content-Type': 'application/json' }
+        }
+      );
+      
+      if (response.responseCode === 200) {
+        // 解析JSON数据
+        let rawData = JSON.parse(response.result);
+        // 将假数据转换为资产格式
+        let assets: AssetItem[] = rawData.map((item: any) => {
+          return {
+            id: item.id,
+            name: `资产${item.id}`,
+            description: item.title,
+            price: Math.floor(Math.random() * 10000)
+          };
+        });
+        this.assetList = assets;
+        console.info(`成功获取${this.assetList.length}条资产数据`);
+      } else {
+        console.error(`请求失败，状态码：${response.responseCode}`);
+      }
+    } catch (error) {
+      console.error('网络请求异常：' + JSON.stringify(error));
+    } finally {
+      this.isLoading = false;
+      httpRequest.destroy();
+    }
+  }
+
+  build() {
+    Column() {
+      // 标题栏
+      Row() {
+        Text('云端资产列表')
+          .fontSize(24)
+          .fontWeight(FontWeight.Bold)
+          .margin({ left: 20 })
+        Blank()
+        Button('返回')
+          .onClick(() => {
+            router.back();
+          })
+          .margin({ right: 20 })
+      }
+      .width('100%')
+      .height(60)
+      .backgroundColor('#F1F3F5')
+
+      // 加载中提示
+      if (this.isLoading) {
+        LoadingProgress()
+          .width(50)
+          .height(50)
+          .margin({ top: 50 })
+      } else {
+        // 资产列表
+        List() {
+          ForEach(this.assetList, (asset: AssetItem, index: number) => {
+            ListItem() {
+              Column() {
+                Text(`【${asset.name}】`)
+                  .fontSize(18)
+                  .fontWeight(FontWeight.Medium)
+                Text(`描述：${asset.description}`)
+                  .fontSize(14)
+                  .fontColor('#666')
+                Text(`价格：¥${asset.price}`)
+                  .fontSize(14)
+                  .fontColor('#E67E22')
+              }
+              .width('100%')
+              .padding(12)
+              .alignItems(HorizontalAlign.Start)
+            }
+            .margin({ top: 8, left: 16, right: 16 })
+            .backgroundColor('#FFFFFF')
+            .borderRadius(12)
+          }, (asset: AssetItem) => asset.id.toString())
+        }
+        .width('100%')
+        .layoutWeight(1)
+      }
+    }
+    .width('100%')
+    .height('100%')
+    .backgroundColor('#F8F9FA')
+  }
+}
+
+// 资产数据模型
+interface AssetItem {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+}</pre>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">📌</span> <strong>代码解读：</strong></p>
+            <ul>
+                <li><code>async/await</code>：让异步代码像同步一样写，更易读。</li>
+                <li><code>try/catch/finally</code>：捕获网络错误，保证程序不崩溃。</li>
+                <li><code>response.responseCode === 200</code>：HTTP 200表示请求成功。</li>
+                <li><code>JSON.parse()</code>：把服务器返回的文本转成JavaScript对象。</li>
+                <li><code>httpRequest.destroy()</code>：用完销毁，释放资源。</li>
+            </ul>
+        </div>
+
+        <h3>🧪 实训任务四：整合到主页面（10分钟）</h3>
+        <div class="step-guide">
+            <li>在主页（如Index.ets）添加一个按钮，点击跳转到CloudAssetsPage。</li>
+            <li>修改主页代码：</li>
+        </div>
+        <div class="code-block">
+            <pre>// 在Index.ets中添加
+Button('从云端获取资产')
+  .onClick(() => {
+    router.pushUrl({ url: 'pages/CloudAssetsPage' });
+  })
+  .margin({ top: 20 })</pre>
+        </div>
+        <div class="task-box">
+            <p>🎉 <strong>运行测试：</strong> 点击按钮，应该能看到从云端获取的资产列表！</p>
+            <p>💡 如果网络请求失败，检查：</p>
+            <ul>
+                <li>模拟器/手机网络是否正常？</li>
+                <li>module.json5是否添加了网络权限？</li>
+                <li>测试接口是否能访问？（浏览器打开https://jsonplaceholder.typicode.com/posts测试）</li>
+            </ul>
+        </div>
+
+        <h3>🧪 挑战任务：添加错误处理弹窗</h3>
+        <div class="important-note error-note">
+            <p><span class="tip-icon">🏆</span> <strong>挑战：</strong> 当网络请求失败时，用prompt.showToast()提示用户“网络开小差了，请稍后重试”。</p>
+            <div class="code-block" style="margin-top: 8px;">
+                <pre>import prompt from '@ohos.prompt';
+
+// 在catch块中添加
+prompt.showToast({
+  message: '网络请求失败，请检查网络',
+  duration: 2000
+});</pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========= 互动活动 ========= -->
+    <div class="section">
+        <h2>🎮 互动活动 · 网络请求接力赛</h2>
+        <div class="task-box">
+            <h3 style="margin-top:0;">「API侦探」小组大比拼</h3>
+            <p><strong>规则：</strong> 每组选择一个免费在线API（如天气API、新闻API、笑话API），修改代码中的URL，获取并展示数据。</p>
+            <ol>
+                <li>🔍 搜索免费API（10分钟）</li>
+                <li>💻 修改代码并运行（10分钟）</li>
+                <li>🎤 每组派代表展示成果（5分钟/组）</li>
+            </ol>
+            <div style="background:#fef3e2; padding: 16px; border-radius: 24px; margin-top: 15px;">
+                <p><strong>📌 推荐免费API：</strong></p>
+                <ul>
+                    <li>天气：<code>https://wttr.in/Beijing?format=j1</code></li>
+                    <li>随机用户：<code>https://randomuser.me/api/</code></li>
+                    <li>一句话笑话：<code>https://api.chucknorris.io/jokes/random</code></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========= 课堂总结 & 课后任务 ========= -->
+    <div class="section">
+        <h2>📝 课堂小结 & 课后任务</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h4>✨ 这节课我们解锁了</h4>
+                <ul style="margin-left: 1.2rem;">
+                    <li>✅ 网络请求的原理（GET方法）</li>
+                    <li>✅ 鸿蒙http模块的使用</li>
+                    <li>✅ JSON数据解析</li>
+                    <li>✅ 异步处理（async/await）</li>
+                    <li>✅ 错误处理与用户提示</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>📂 课后必做任务</h4>
+                <ul>
+                    <li>📌 任务1：完善错误处理，添加loading动画。</li>
+                    <li>📌 任务2：尝试调用一个真实API（如和风天气），展示数据。</li>
+                    <li>📌 任务3：预习“本地数据与云端数据同步”，思考如何合并本地和云端数据。</li>
+                </ul>
+            </div>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">🔔</span> <strong>下节课预告：</strong> 第8周 · 星期四 第9-10节 (15:50-17:20) —— 教案058-第8周-第三阶段-本地数据与云端数据同步设计</p>
+            <p>🏁 我们将学习如何将本地数据库与云端数据合并，实现数据的双向同步！记得提前预习相关内容。</p>
+        </div>
+    </div>
+
+    <!-- 导出Word按钮 -->
+    <div class="btn-group">
+        <button class="button" onclick="exportToWord()">📥 导出Word教案（教案057）</button>
+    </div>
+    <footer>
+        ⚡ 本教案为2课时（80分钟），包含完整实训步骤、代码示例、互动活动。<br>
+        🧑‍🏫 教师可根据学生进度适当调整，重点在于让学生理解网络请求的完整流程。
+    </footer>
+</div>
+
+<script>
+    function exportToWord() {
+        let docHtml = document.documentElement.cloneNode(true);
+        let btnGroup = docHtml.querySelector('.btn-group');
+        if(btnGroup) btnGroup.style.display = 'none';
+        let htmlContent = '<!DOCTYPE html>\n' + docHtml.outerHTML;
+        const blob = new Blob([htmlContent], { type: 'application/msword' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.download = '教案057_第8周_模拟从云端获取资产数据.doc';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        alert('教案Word文档已生成！\n文件名：教案057_第8周_模拟从云端获取资产数据.doc');
+    }
+</script>
+</body>
+</html>
