@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教案076：日志系统与调试信息 · 鸿蒙调试实战</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
+            line-height: 1.65;
+            color: #1f2d3a;
+            background-color: #f0f6fc;
+            padding: 30px 20px;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px rgba(0, 40, 60, 0.1);
+            overflow: hidden;
+            padding: 30px 35px 50px;
+        }
+        h1 {
+            font-size: 2.4rem;
+            background: linear-gradient(135deg, #0a2e4a, #0078d4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-align: center;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            background: #e9f2fa;
+            display: inline-block;
+            width: auto;
+            margin: 0 auto 20px;
+            padding: 8px 28px;
+            border-radius: 60px;
+            color: #0066a0;
+            font-weight: 500;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .header-meta {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            background: #eef3fc;
+            padding: 12px 20px;
+            border-radius: 40px;
+            margin: 20px 0 30px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #004d7a;
+            border: 1px solid #cde0ef;
+        }
+        .section {
+            background: white;
+            border-radius: 28px;
+            margin-bottom: 35px;
+            padding: 0 5px;
+        }
+        h2 {
+            font-size: 1.8rem;
+            color: #0a4b6e;
+            border-left: 8px solid #0078d4;
+            padding-left: 20px;
+            margin: 30px 0 20px 0;
+            background: linear-gradient(to right, #f0f8ff, #ffffff);
+            border-radius: 0 20px 20px 0;
+        }
+        h3 {
+            font-size: 1.45rem;
+            margin: 25px 0 12px 0;
+            color: #1f6392;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px dotted #b9d9f0;
+            padding-bottom: 8px;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 18px 20px;
+            border: 1px solid #dcecf5;
+            box-shadow: 0 6px 14px rgba(0, 40, 60, 0.05);
+            transition: all 0.2s;
+        }
+        .card:hover {
+            border-color: #0078d4;
+            box-shadow: 0 12px 22px rgba(0, 120, 212, 0.12);
+        }
+        .card h4 {
+            font-size: 1.35rem;
+            color: #005a9c;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 4px solid #0078d4;
+            padding-left: 14px;
+        }
+        .badge {
+            background: #0078d4;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 10px;
+            border-radius: 30px;
+            font-weight: normal;
+            margin-left: 8px;
+        }
+        .task-box {
+            background: #f0f9fe;
+            border-left: 6px solid #28a745;
+            padding: 18px 24px;
+            border-radius: 24px;
+            margin: 20px 0;
+        }
+        .important-note {
+            background: #fff8e7;
+            border-left: 6px solid #ff9800;
+            padding: 18px 24px;
+            border-radius: 24px;
+            margin: 20px 0;
+        }
+        .code-block {
+            background: #1e2f3c;
+            color: #e0f2fe;
+            padding: 16px 22px;
+            border-radius: 20px;
+            font-family: 'JetBrains Mono', 'Cascadia Code', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 5px solid #0078d4;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .code-inline {
+            background: #eef2f5;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: #0070c0;
+        }
+        .step-guide {
+            background: #f8fafd;
+            border-radius: 28px;
+            padding: 20px 28px;
+            counter-reset: step-counter;
+            list-style: none;
+        }
+        .step-guide li {
+            counter-increment: step-counter;
+            margin-bottom: 20px;
+            padding-left: 52px;
+            position: relative;
+            font-weight: 500;
+        }
+        .step-guide li::before {
+            content: counter(step-counter);
+            background: #0078d4;
+            color: white;
+            width: 34px;
+            height: 34px;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            left: 0;
+            top: -2px;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px 0 20px;
+        }
+        .button {
+            background: linear-gradient(95deg, #0078d4, #005a9e);
+            border: none;
+            color: white;
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 5px 12px rgba(0, 90, 158, 0.3);
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(95deg, #008ae6, #006bb3);
+            box-shadow: 0 10px 20px rgba(0, 90, 158, 0.4);
+        }
+        .tip-icon {
+            font-size: 1.4rem;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #6f8ea3;
+            border-top: 1px solid #d4e2ef;
+            padding-top: 25px;
+            margin-top: 35px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        th {
+            background: #0078d4;
+            color: white;
+            padding: 10px;
+            font-weight: 600;
+        }
+        td {
+            border: 1px solid #cfdfec;
+            padding: 10px;
+        }
+        @media (max-width: 680px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.9rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🐞 日志系统与调试信息 · 鸿蒙调试实战</h1>
+    <div style="text-align: center;">
+        <span class="subtitle">📱 让代码“开口说话” · 成为bug终结者</span>
+    </div>
+    <div class="header-meta">
+        <span>📅 第11周 · 星期一 第9-10节 (15:50-17:20)</span>
+        <span>⏱️ 2课时 (80分钟)  |  💻 理实一体化 · 高强度实训</span>
+        <span>🎯 授课对象：技师学院 · 鸿蒙集训队</span>
+    </div>
+
+    <!-- ========= 学习目标卡片 ========= -->
+    <div class="section">
+        <h2>🎯 学习目标 · 这堂课我们要拿下什么？</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h4>📘 知识点1 <span class="badge">hilog日志系统</span></h4>
+                <p><strong>学到：</strong> 鸿蒙官方日志系统hilog的原理、日志级别（DEBUG/INFO/WARN/ERROR/FATAL）。</p>
+                <p>💡 类比：日志就像飞机黑匣子，记录程序每一步行踪。</p>
+            </div>
+            <div class="card">
+                <h4>🛠️ 技能点1 <span class="badge">输出调试日志</span></h4>
+                <p><strong>学会：</strong> 在代码中插入hilog，在DevEco Studio的Log窗口查看筛选日志。</p>
+            </div>
+            <div class="card">
+                <h4>📘 知识点2 <span class="badge">console对象</span></h4>
+                <p><strong>学到：</strong> ArkTS中console.log/warn/error的使用，以及适用场景。</p>
+            </div>
+            <div class="card">
+                <h4>🛠️ 技能点2 <span class="badge">日志级别过滤</span></h4>
+                <p><strong>学会：</strong> 使用Log过滤器和搜索功能，快速定位问题。</p>
+            </div>
+            <div class="card">
+                <h4>📘 知识点3 <span class="badge">调试策略</span></h4>
+                <p><strong>学到：</strong> 关键节点打日志、日志埋点、性能监控日志。</p>
+            </div>
+            <div class="card">
+                <h4>🛠️ 技能点3 <span class="badge">实战打点</span></h4>
+                <p><strong>学会：</strong> 在资产管理系统生命周期中添加调试日志，模拟bug并定位解决。</p>
+            </div>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">💡</span> <strong>老师敲黑板：</strong> 调试能力是程序员的核心技能，学会看日志等于拥有“透视眼”。今天过后，遇到bug不再慌张！</p>
+        </div>
+    </div>
+
+    <!-- ========= 知识讲解 ========= -->
+    <div class="section">
+        <h2>🧩 知识讲解 · 让程序“开口说话”</h2>
+        
+        <h3>1. 为什么需要日志？—— 程序员的“行车记录仪”</h3>
+        <div class="task-box">
+            <p><span class="tip-icon">🎬</span> <strong>趣味场景：</strong> 你的App突然闪退，用户只看到“应用无响应”。你不知道哪里出错，就像蒙着眼睛走路。<strong>日志</strong>就是程序的“行车记录仪”，记录每一帧发生了什么。</p>
+            <p><strong>没有日志的调试：</strong> 猜谜 → 改代码 → 运行 → 还是错 → 崩溃。</p>
+            <p><strong>有日志的调试：</strong> 看日志 → 定位行号 → 修复 → 搞定！</p>
+        </div>
+
+        <h3>2. 鸿蒙hilog系统 · 官方标准日志</h3>
+        <div class="card-grid">
+            <div class="card">
+                <h4>📊 日志级别（由低到高）</h4>
+                <ul>
+                    <li><span class="code-inline">DEBUG</span> - 调试细节，开发时用</li>
+                    <li><span class="code-inline">INFO</span> - 一般信息，如“登录成功”</li>
+                    <li><span class="code-inline">WARN</span> - 警告，可能有问题但不影响运行</li>
+                    <li><span class="code-inline">ERROR</span> - 错误，功能异常</li>
+                    <li><span class="code-inline">FATAL</span> - 致命错误，应用可能崩溃</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>📦 hilog基本用法</h4>
+                <div class="code-block" style="margin-top: 5px;">
+import hilog from '@ohos.hilog';
+
+// 领域ID: 0x0001, 标签: "MyApp"
+hilog.info(0x0001, "MyApp", "用户登录成功，userId=%{public}d", userId);
+hilog.error(0x0001, "MyApp", "网络请求失败，错误码=%{public}d", errCode);
+                </div>
+            </div>
+        </div>
+
+        <h3>3. console对象 · 快速调试小助手</h3>
+        <div class="code-block">
+// 最简单直接的方法，适合快速验证
+console.log("普通信息: " + message);
+console.warn("警告: 数组长度为空");
+console.error("错误: 数据格式不正确");
+console.debug("调试: 变量值=", JSON.stringify(obj));
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">⚡</span> <strong>区别对比：</strong> <span class="code-inline">console</span>简单方便，适合临时调试；<span class="code-inline">hilog</span>更强大，支持级别过滤、领域分类、生产环境保留，正式项目推荐用hilog。</p>
+        </div>
+
+        <h3>4. 调试策略 · 高手秘诀</h3>
+        <ul>
+            <li>📍 <strong>关键节点埋点</strong>：页面生命周期（onPageShow/onHide）、按钮点击、网络请求前后、数据存储成功/失败。</li>
+            <li>📍 <strong>变量快照</strong>：条件分支入口打印关键变量值。</li>
+            <li>📍 <strong>性能日志</strong>：记录耗时操作开始/结束，计算时间差。</li>
+            <li>📍 <strong>异常捕获日志</strong>：try-catch中打印错误栈。</li>
+        </ul>
+    </div>
+
+    <!-- ========= 超详细实训指导 ========= -->
+    <div class="section">
+        <h2>⚙️ 技能实训 · 动手打造调试利器</h2>
+        <p style="background:#e2f0fe; border-radius: 40px; padding: 8px 20px; display: inline-block; margin-bottom: 15px;">✅ 实训目标：在资产管理项目中植入完整日志体系，能通过日志快速定位问题</p>
+
+        <h3>🔧 实训一：hilog初体验（15分钟）</h3>
+        <div class="step-guide">
+            <li><strong>打开之前的资产管理项目</strong>，在 <code>entry/src/main/ets/pages/Index.ets</code> 顶部导入hilog：<br>
+                <span class="code-inline">import hilog from '@ohos.hilog';</span>
+            </li>
+            <li><strong>在aboutToAppear()生命周期</strong>中添加日志：
+            <div class="code-block">
+aboutToAppear() {
+  hilog.info(0x0001, "AssetApp", "页面加载完成，当前时间戳=%{public}d", Date.now());
+  console.log("Index页面已显示");
+}
+            </div>
+            </li>
+            <li><strong>运行应用</strong>，打开DevEco Studio底部的“Log”面板，选择自己的设备，筛选标签“AssetApp”。观察输出的日志。</li>
+            <li><strong>尝试不同级别</strong>：将info改成warn/error，观察日志颜色变化（warn黄色，error红色）。</li>
+        </div>
+        <div class="task-box">
+            <p>💡 <strong>老师巡导：</strong> 提醒学生注意日志区域可以通过“Level”下拉菜单过滤级别，查看特定级别日志。</p>
+        </div>
+
+        <h3>🔧 实训二：资产录入页面完整埋点（25分钟）</h3>
+        <div class="step-guide">
+            <li><strong>打开资产录入页</strong>（AssetEntry.ets），在以下位置添加日志：
+                <ul style="margin-top: 8px;">
+                    <li>页面初始化：打印“资产录入页打开”</li>
+                    <li>输入框变化：打印当前输入内容（可选）</li>
+                    <li>点击“保存”按钮：打印“准备保存资产数据”</li>
+                    <li>数据验证通过后：打印“验证通过，开始存储”</li>
+                    <li>存储成功/失败：分别打印info/error日志</li>
+                </ul>
+            </li>
+            <li>参考代码片段：
+            <div class="code-block">
+// 保存按钮点击事件
+saveAsset() {
+  hilog.info(0x0001, "AssetEntry", "用户点击保存，资产名称=%{public}s", this.assetName);
+  if (!this.assetName) {
+    hilog.warn(0x0001, "AssetEntry", "资产名称为空，提示用户");
+    promptAction.showToast({ message: "请输入资产名称" });
+    return;
+  }
+  try {
+    // 模拟存储逻辑
+    hilog.info(0x0001, "AssetEntry", "开始存储资产到数据库");
+    // ... 实际存储代码
+    hilog.info(0x0001, "AssetEntry", "存储成功");
+  } catch (err) {
+    hilog.error(0x0001, "AssetEntry", "存储失败：%{public}s", JSON.stringify(err));
+  }
+}
+            </div>
+            </li>
+            <li><strong>故意制造一个错误</strong>（比如数据库未初始化），运行并观察错误日志如何显示。</li>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">📝</span> <strong>小技巧：</strong> 使用<span class="code-inline">%{public}s</span>格式化字符串，敏感信息可以用<span class="code-inline">%{private}s</span>自动脱敏。</p>
+        </div>
+
+        <h3>🔧 实训三：Log过滤器与搜索挑战（15分钟）</h3>
+        <div class="step-guide">
+            <li><strong>在资产列表页</strong>添加循环打印10条日志（模拟大量日志输出）。</li>
+            <li><strong>打开Log面板</strong>，尝试以下过滤方式：
+                <ul>
+                    <li>按标签过滤：输入“AssetApp”只显示你的应用日志</li>
+                    <li>按级别过滤：只显示ERROR级别</li>
+                    <li>搜索关键词：如“存储成功”</li>
+                </ul>
+            </li>
+            <li><strong>小组PK：</strong> 每组在代码里故意埋一个带特殊标记的日志（比如 <span class="code-inline">// FLAG_20241111</span>），让其他组最快找到这个日志特征，最快找到的获胜。</li>
+        </div>
+
+        <h3>🔧 实训四：性能日志 · 监控应用启动耗时（15分钟）</h3>
+        <div class="step-guide">
+            <li>在EntryAbility的<span class="code-inline">onCreate()</span>和<span class="code-inline">onWindowStageCreate()</span>开始结束位置记录时间戳。
+            <div class="code-block">
+// EntryAbility.ets
+onCreate(want, launchParam) {
+  hilog.info(0x0001, "Performance", "onCreate开始");
+  AppStorage.setOrCreate('appStartTime', Date.now());
+}
+
+onWindowStageCreate(windowStage) {
+  let startTime = AppStorage.get('appStartTime');
+  let cost = Date.now() - startTime;
+  hilog.info(0x0001, "Performance", "启动耗时=%{public}d ms", cost);
+}
+            </div>
+            </li>
+            <li><strong>多次冷启动</strong>（杀掉进程重新打开），观察启动耗时变化，记录下来与队友讨论哪些阶段最耗时。</li>
+        </div>
+    </div>
+
+    <!-- ========= 互动活动 ========= -->
+    <div class="section">
+        <h2>🎮 互动活动 · 我是bug侦探</h2>
+        <div class="task-box">
+            <h3 style="margin-top:0;">「日志破案大赛」</h3>
+            <p><strong>规则：</strong></p>
+            <ol>
+                <li>老师提供一个包含3个“隐性bug”的项目代码（已加入完整日志但故意有逻辑错误）。</li>
+                <li>每组分配一台电脑，通过阅读运行日志，找出bug位置并修复。</li>
+                <li>限时12分钟，先全部找出并修复的小组获胜。</li>
+            </ol>
+            <div style="background:#fef3e2; padding: 16px; border-radius: 24px; margin-top: 15px;">
+                <p><strong>🏆 获胜奖励：</strong> “最佳侦探”称号 + 团队积分。同时所有小组将收获宝贵的调试实战经验。</p>
+                <p><strong>示例bug场景：</strong> 点击保存按钮无反应 → 看error日志发现数据库表不存在 → 修复建表语句。</p>
+            </div>
+        </div>
+        <p><span class="tip-icon">💬</span> 老师总结：日志不是麻烦，而是你的“超级外挂”。从现在开始，写代码必须同步写日志！</p>
+    </div>
+
+    <!-- ========= 课堂小结 & 课后任务 ========= -->
+    <div class="section">
+        <h2>📝 课堂小结 & 课后任务</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h4>✨ 这节课我们解锁了</h4>
+                <ul>
+                    <li>✅ 鸿蒙hilog日志系统及5个级别</li>
+                    <li>✅ console快速调试方法</li>
+                    <li>✅ 实战埋点：在资产录入页、列表页添加日志</li>
+                    <li>✅ Log过滤器筛选技巧</li>
+                    <li>✅ 性能日志监控启动耗时</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>📂 课后任务（每人独立完成）</h4>
+                <ul>
+                    <li>📌 任务1：给自己的资产管理项目所有页面（至少3个）添加完整的hilog日志，覆盖生命周期和主要操作。</li>
+                    <li>📌 任务2：尝试在模拟器中制造一个崩溃（如空指针），通过error日志找到崩溃原因并修复。</li>
+                    <li>📌 任务3：预习“错误上报与崩溃分析”，思考如果线上应用崩溃，怎么收集日志？</li>
+                </ul>
+            </div>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">🔔</span> <strong>下节课预告：</strong> 第11周 · 星期二 第5-6节 → <strong>「教案077：错误上报与崩溃分析」</strong>，我们将学习如何捕获未处理的异常、上传崩溃日志到服务器，让应用更健壮！记得提前预习ArkTS的try-catch-finally。</p>
+            <p>🏁 调试宣言：日志在手，bug不愁。从今天起，做一个会写日志的鸿蒙开发者！</p>
+        </div>
+    </div>
+
+    <!-- 导出Word按钮 -->
+    <div class="btn-group">
+        <button class="button" onclick="exportToWord()">📥 导出Word教案（日志系统与调试信息）</button>
+    </div>
+    <footer>
+        ⚡ 本教案为2课时（80分钟），包含完整实训步骤、代码示例、互动活动，适合投影教学。<br>
+        🧑‍🏫 教师可根据学生进度适当调整，重点培养学生调试思维和日志习惯。
+    </footer>
+</div>
+
+<script>
+    function exportToWord() {
+        let docHtml = document.documentElement.cloneNode(true);
+        let btnGroup = docHtml.querySelector('.btn-group');
+        if(btnGroup) btnGroup.style.display = 'none';
+        let htmlContent = '<!DOCTYPE html>\n' + docHtml.outerHTML;
+        const blob = new Blob([htmlContent], { type: 'application/msword' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.download = '教案076_第11周_日志系统与调试信息.doc';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        alert('教案Word文档已生成，请查收下载文件夹！\n文件名：教案076_第11周_日志系统与调试信息.doc');
+    }
+</script>
+</body>
+</html>

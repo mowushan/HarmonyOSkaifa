@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教案012：基础UI组件 · Text、Button、Image</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
+            line-height: 1.65;
+            color: #1f2d3a;
+            background-color: #f0f6fc;
+            padding: 30px 20px;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px rgba(0, 40, 60, 0.1);
+            overflow: hidden;
+            padding: 30px 35px 50px;
+        }
+        h1 {
+            font-size: 2.4rem;
+            background: linear-gradient(135deg, #0a2e4a, #0078d4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-align: center;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            background: #e9f2fa;
+            display: inline-block;
+            width: auto;
+            margin: 0 auto 20px;
+            padding: 8px 28px;
+            border-radius: 60px;
+            color: #0066a0;
+            font-weight: 500;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .header-meta {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            background: #eef3fc;
+            padding: 12px 20px;
+            border-radius: 40px;
+            margin: 20px 0 30px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #004d7a;
+            border: 1px solid #cde0ef;
+        }
+        .section {
+            background: white;
+            border-radius: 28px;
+            margin-bottom: 35px;
+            padding: 0 5px;
+        }
+        h2 {
+            font-size: 1.8rem;
+            color: #0a4b6e;
+            border-left: 8px solid #0078d4;
+            padding-left: 20px;
+            margin: 30px 0 20px 0;
+            background: linear-gradient(to right, #f0f8ff, #ffffff);
+            border-radius: 0 20px 20px 0;
+        }
+        h3 {
+            font-size: 1.45rem;
+            margin: 25px 0 12px 0;
+            color: #1f6392;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px dotted #b9d9f0;
+            padding-bottom: 8px;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 18px 20px;
+            border: 1px solid #dcecf5;
+            box-shadow: 0 6px 14px rgba(0, 40, 60, 0.05);
+            transition: all 0.2s;
+        }
+        .card:hover {
+            border-color: #0078d4;
+            box-shadow: 0 12px 22px rgba(0, 120, 212, 0.12);
+        }
+        .card h4 {
+            font-size: 1.35rem;
+            color: #005a9c;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 4px solid #0078d4;
+            padding-left: 14px;
+        }
+        .badge {
+            background: #0078d4;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 10px;
+            border-radius: 30px;
+            font-weight: normal;
+            margin-left: 8px;
+        }
+        .task-box {
+            background: #f0f9fe;
+            border-left: 6px solid #28a745;
+            padding: 18px 24px;
+            border-radius: 24px;
+            margin: 20px 0;
+        }
+        .important-note {
+            background: #fff8e7;
+            border-left: 6px solid #ff9800;
+            padding: 18px 24px;
+            border-radius: 24px;
+            margin: 20px 0;
+        }
+        .code-block {
+            background: #1e2f3c;
+            color: #e0f2fe;
+            padding: 16px 22px;
+            border-radius: 20px;
+            font-family: 'JetBrains Mono', 'Cascadia Code', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 5px solid #0078d4;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .step-guide {
+            background: #f8fafd;
+            border-radius: 28px;
+            padding: 20px 28px;
+            counter-reset: step-counter;
+            list-style: none;
+        }
+        .step-guide li {
+            counter-increment: step-counter;
+            margin-bottom: 20px;
+            padding-left: 52px;
+            position: relative;
+            font-weight: 500;
+        }
+        .step-guide li::before {
+            content: counter(step-counter);
+            background: #0078d4;
+            color: white;
+            width: 34px;
+            height: 34px;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            left: 0;
+            top: -2px;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px 0 20px;
+        }
+        .button {
+            background: linear-gradient(95deg, #0078d4, #005a9e);
+            border: none;
+            color: white;
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 5px 12px rgba(0, 90, 158, 0.3);
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(95deg, #008ae6, #006bb3);
+            box-shadow: 0 10px 20px rgba(0, 90, 158, 0.4);
+        }
+        .tip-icon {
+            font-size: 1.4rem;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #6f8ea3;
+            border-top: 1px solid #d4e2ef;
+            padding-top: 25px;
+            margin-top: 35px;
+        }
+        .component-show {
+            background: #f5f9fe;
+            border-radius: 20px;
+            padding: 16px;
+            margin: 15px 0;
+            border: 1px solid #cae0f0;
+        }
+        .component-demo {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        @media (max-width: 680px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.9rem; }
+        }
+    
+            pre, .code-block {
+                white-space: pre-wrap !important;
+                word-wrap: break-word !important;
+                font-family: monospace !important;
+                line-height: 1.5 !important;
+            }
+        </style>
+</head>
+<body>
+<div class="container">
+    <h1>🎨 鸿蒙UI初体验 · Text、Button、Image组件</h1>
+    <div style="text-align: center;">
+        <span class="subtitle">✨ 让界面“活”起来 · 从组件开始</span>
+    </div>
+    <div class="header-meta">
+        <span>📅 第3周 · 星期一 第9-10节 (15:50-17:20)</span>
+        <span>⏱️ 2课时 (80分钟)  |  💻 实训课 · DevEco Studio</span>
+        <span>🎯 授课对象：技师学院 · 零基础集训队</span>
+    </div>
+
+    <!-- ========= 学习目标卡片 ========= -->
+    <div class="section">
+        <h2>🎯 学习目标 · 这堂课我们要拿下什么？</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h4>📘 知识点1 <span class="badge">Text组件</span></h4>
+                <p><strong>学到：</strong> 文本组件的常用属性（字体大小、颜色、加粗、对齐方式），让文字变得好看。</p>
+                <p>💡 类比：就像Word里设置文字样式一样简单！</p>
+            </div>
+            <div class="card">
+                <h4>🛠️ 技能点1 <span class="badge">显示文字</span></h4>
+                <p><strong>学会：</strong> 在页面中添加Text组件，并修改样式，显示欢迎语。</p>
+            </div>
+            <div class="card">
+                <h4>📘 知识点2 <span class="badge">Button组件</span></h4>
+                <p><strong>学到：</strong> 按钮的点击事件（onClick），以及按钮样式（背景色、圆角、内边距）。</p>
+            </div>
+            <div class="card">
+                <h4>🛠️ 技能点2 <span class="badge">按钮交互</span></h4>
+                <p><strong>学会：</strong> 点击按钮后改变文字内容，让页面有“反应”。</p>
+            </div>
+            <div class="card">
+                <h4>📘 知识点3 <span class="badge">Image组件</span></h4>
+                <p><strong>学到：</strong> 如何加载本地图片和网络图片，设置图片尺寸和缩放模式。</p>
+            </div>
+            <div class="card">
+                <h4>🛠️ 技能点3 <span class="badge">图文结合</span></h4>
+                <p><strong>学会：</strong> 在界面上同时放置文字、按钮、图片，搭建一个“个人名片”小界面。</p>
+            </div>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">💡</span> <strong>老师暖心提示：</strong> 今天全是“可视化”操作，写代码→立刻看到效果！每一行代码都能让界面变样，超有成就感。不怕慢，就怕不动手。</p>
+        </div>
+    </div>
+
+    <!-- ========= 知识讲解 ========= -->
+    <div class="section">
+        <h2>🧩 知识讲解 · 认识三大组件</h2>
+        
+        <h3>1. Text组件 —— 让文字“说话”</h3>
+        <div class="task-box">
+            <p><span class="tip-icon">📝</span> <strong>趣味比喻：</strong> Text就像一张张“文字便利贴”，你可以贴在屏幕的任何位置，还能改变它的样子！</p>
+            <p><strong>常用属性（像给文字化妆）：</strong></p>
+            <ul>
+                <li><code>fontSize(20)</code> → 字号大小，数字越大字越大</li>
+                <li><code>fontColor(Color.Red)</code> → 文字颜色，红橙黄绿青蓝紫随便选</li>
+                <li><code>fontWeight(FontWeight.Bold)</code> → 加粗，让文字更有力量</li>
+                <li><code>textAlign(TextAlign.Center)</code> → 居中、左对齐、右对齐</li>
+            </ul>
+        </div>
+        <pre style="white-space: pre-wrap; word-wrap: break-word; font-family: monospace; line-height: 1.5;" class="code-block">
+<span class="comment">// Text组件的基本写法</span>
+Text('欢迎来到鸿蒙世界')
+  .fontSize(28)
+  .fontColor(Color.Blue)
+  .fontWeight(FontWeight.Bold)
+  .textAlign(TextAlign.Center)
+  .width('100%')
+        </pre>
+
+        <h3>2. Button组件 —— 点击就有反应</h3>
+        <div class="task-box">
+            <p><span class="tip-icon">🔘</span> <strong>趣味比喻：</strong> 按钮就像游戏里的“触发开关”，按下去就会触发魔法！</p>
+            <p><strong>核心玩法：</strong> <code>onClick(() => { 点击后要做的事情 })</code></p>
+            <p><strong>样式美化：</strong> backgroundColor背景色，borderRadius圆角，padding内边距。</p>
+        </div>
+        <pre style="white-space: pre-wrap; word-wrap: break-word; font-family: monospace; line-height: 1.5;" class="code-block">
+<span class="comment">// 按钮 + 点击事件</span>
+Button('点我试试')
+  .onClick(() => {
+    console.log('按钮被点击了！')
+  })
+  .backgroundColor('#0078d4')
+  .borderRadius(20)
+  .padding({ left: 20, right: 20, top: 10, bottom: 10 })
+        </pre>
+
+        <h3>3. Image组件 —— 一图胜千言</h3>
+        <div class="task-box">
+            <p><span class="tip-icon">🖼️</span> <strong>趣味比喻：</strong> Image就像相框，把图片装进去展示出来。</p>
+            <p><strong>两种图片来源：</strong></p>
+            <ul>
+                <li>📁 本地图片：<code>$r('app.media.icon')</code> 或 <code>$rawfile('logo.png')</code></li>
+                <li>🌐 网络图片：<code>src('https://xxx.com/pic.jpg')</code>（需要申请网络权限）</li>
+            </ul>
+            <p><strong>常用设置：</strong> width/width高度，objectFit缩放模式（Cover保持比例填满，Contain完整显示）。</p>
+        </div>
+        <pre style="white-space: pre-wrap; word-wrap: break-word; font-family: monospace; line-height: 1.5;" class="code-block">
+<span class="comment">// 图片组件示例</span>
+Image($r('app.media.startIcon'))
+  .width(100)
+  .height(100)
+  .objectFit(ImageFit.Cover)
+  .borderRadius(16)
+        </pre>
+    </div>
+
+    <!-- ========= 超详细实训环节 ========= -->
+    <div class="section">
+        <h2>⚙️ 技能实训 · 动手搭建“个人名片”界面</h2>
+        <p style="background:#e2f0fe; border-radius: 40px; padding: 8px 20px; display: inline-block; margin-bottom: 15px;">✅ 实训目标：综合运用Text、Button、Image，制作一个可交互的“自我介绍卡片”</p>
+
+        <h3>📁 课前准备</h3>
+        <div class="task-box">
+            <p>1. 打开DevEco Studio，新建一个Empty Ability项目，取名 <code>UIComponentsDemo</code>。</p>
+            <p>2. 准备好一张本地图片（可以是自己的照片或喜欢的logo），复制到 <code>entry/src/main/resources/base/media/</code> 文件夹下，命名为 <code>avatar.jpg</code>。</p>
+            <p>3. 我们将在 <code>Index.ets</code> 中编写代码。</p>
+        </div>
+
+        <h3>🧪 实训任务一：搭建基础布局（15分钟）</h3>
+        <div class="step-guide">
+            <li><strong>编写基础结构：</strong> 在 <code>build()</code> 中创建 <code>Column</code> 容器，设置居中。</li>
+            <li><strong>添加头像图片：</strong> 使用Image组件加载刚刚放入的图片，设置宽100、高100，圆角50（变成圆形）。</li>
+            <li><strong>添加姓名Text：</strong> 显示“张小明”（替换自己的名字），字体24号，加粗，深蓝色。</li>
+            <li><strong>添加职位Text：</strong> 显示“鸿蒙开发者 · 预备队员”，字体16号，灰色。</li>
+            <li><strong>运行预览：</strong> 在预览器或模拟器中查看效果，调整间距。</li>
+        </div>
+        <pre style="white-space: pre-wrap; word-wrap: break-word; font-family: monospace; line-height: 1.5;" class="code-block">
+<span class="comment">// 基础布局代码示例</span>
+Column({ space: 12 }) {
+  Image($r('app.media.avatar'))
+    .width(100)
+    .height(100)
+    .borderRadius(50)
+  Text('张小明')
+    .fontSize(24)
+    .fontWeight(FontWeight.Bold)
+    .fontColor('#1e466e')
+  Text('鸿蒙开发者 · 预备队员')
+    .fontSize(16)
+    .fontColor('#7f8c8d')
+}
+.width('100%')
+.height('100%')
+.justifyContent(FlexAlign.Center)
+.alignItems(HorizontalAlign.Center)
+        </pre>
+
+        <h3>🧪 实训任务二：添加交互按钮（20分钟）</h3>
+        <div class="step-guide">
+            <li><strong>添加“打招呼”按钮：</strong> 在Text下方添加Button，文字为“👋 打个招呼”。</li>
+            <li><strong>定义状态变量：</strong> 在组件顶部定义 <code>@State message: string = '你好，很高兴认识你！'</code>。</li>
+            <li><strong>点击按钮更新文字：</strong> 在按钮的onClick中，修改message的内容（例如改成“鸿蒙集训，未来可期！”）。</li>
+            <li><strong>添加显示消息的Text：</strong> 在按钮下方添加一个Text组件，内容绑定 <code>this.message</code>，字体颜色蓝色。</li>
+            <li><strong>测试交互：</strong> 点击按钮，下方文字会实时变化！</li>
+        </div>
+        <pre style="white-space: pre-wrap; word-wrap: break-word; font-family: monospace; line-height: 1.5;" class="code-block">
+<span class="comment">// 状态变量 + 按钮交互</span>
+@State message: string = '你好，很高兴认识你！'
+
+// 在Column中添加
+Button('👋 打个招呼')
+  .onClick(() => {
+    this.message = '鸿蒙集训，未来可期！🚀'
+  })
+  .backgroundColor('#0078d4')
+  .fontColor(Color.White)
+  .borderRadius(20)
+  .padding({ left: 20, right: 20, top: 8, bottom: 8 })
+
+Text(this.message)
+  .fontSize(16)
+  .fontColor('#0078d4')
+  .margin({ top: 16 })
+        </pre>
+
+        <h3>🧪 实训任务三：图片切换（25分钟）</h3>
+        <div class="step-guide">
+            <li><strong>准备多张图片：</strong> 再添加一张图片到media文件夹，比如 <code>avatar2.jpg</code>。</li>
+            <li><strong>定义图片资源变量：</strong> <code>@State currentAvatar: Resource = $r('app.media.avatar')</code>。</li>
+            <li><strong>添加“换头像”按钮：</strong> 添加第二个按钮，文字为“🔄 换个头像”。</li>
+            <li><strong>点击切换图片：</strong> 在onClick中判断当前头像，切换成另一张。</li>
+            <li><strong>美化按钮：</strong> 设置不同背景色，两个按钮并排显示（使用Row组件包裹）。</li>
+        </div>
+        <pre style="white-space: pre-wrap; word-wrap: break-word; font-family: monospace; line-height: 1.5;" class="code-block">
+<span class="comment">// 图片切换逻辑</span>
+@State currentAvatar: Resource = $r('app.media.avatar')
+@State isFirst: boolean = true
+
+Image(this.currentAvatar)
+  .width(100)
+  .height(100)
+  .borderRadius(50)
+
+Row({ space: 20 }) {
+  Button('👋 打招呼')
+    .onClick(() => { this.message = '鸿蒙集训，未来可期！🚀' })
+  Button('🔄 换头像')
+    .onClick(() => {
+      if (this.isFirst) {
+        this.currentAvatar = $r('app.media.avatar2')
+      } else {
+        this.currentAvatar = $r('app.media.avatar')
+      }
+      this.isFirst = !this.isFirst
+    })
+}
+        </pre>
+
+        <h3>🧪 实训任务四：综合挑战 · 完成“个人名片”完整版（20分钟）</h3>
+        <div class="task-box">
+            <p><strong>🎯 最终成品要求：</strong></p>
+            <ol>
+                <li>顶部圆形头像（可点击换头像）</li>
+                <li>姓名 + 格言/职位（用Text组件）</li>
+                <li>一个计数按钮：点击后显示“已经点击X次”，记录点击次数</li>
+                <li>一个“重置”按钮，将计数归零，同时把消息恢复默认</li>
+                <li>整体布局优雅，有适当的边距和圆角</li>
+            </ol>
+            <p><strong>💡 提示：</strong> 使用<code>@State count: number = 0</code>来记录次数，按钮里<code>this.count++</code>。</p>
+        </div>
+        <pre style="white-space: pre-wrap; word-wrap: break-word; font-family: monospace; line-height: 1.5;" class="code-block">
+<span class="comment">// 完整版核心代码片段</span>
+@State count: number = 0
+
+Text(`点击次数：${this.count}`)
+  .fontSize(18)
+  .margin({ top: 16 })
+
+Row({ space: 20 }) {
+  Button('👍 点赞')
+    .onClick(() => { this.count++ })
+  Button('🗑️ 重置')
+    .onClick(() => { 
+      this.count = 0
+      this.message = '你好，很高兴认识你！'
+    })
+}
+        </pre>
+        <div class="important-note">
+            <p><span class="tip-icon">🏆</span> <strong>小组展示：</strong> 每个小组推选一位同学，展示自己的“个人名片”，并介绍用了哪些组件和交互。老师点评并打分！</p>
+        </div>
+    </div>
+
+    <!-- ========= 互动活动 ========= -->
+    <div class="section">
+        <h2>🎮 互动活动 · 组件大改造</h2>
+        <div class="task-box">
+            <h3 style="margin-top:0;">「创意UI改造家」小组赛</h3>
+            <p><strong>规则：</strong> 每组在20分钟内，对刚才的个人名片进行“极限美化”。</p>
+            <ul>
+                <li>✨ 必做：添加一个渐变色背景（使用linearGradient）</li>
+                <li>✨ 必做：按钮增加悬停效果（stateStyles）</li>
+                <li>✨ 加分项：添加一个有趣的动效（点击时缩放效果）</li>
+                <li>✨ 加分项：加入网络图片（比如从网上找一张风景图作为背景）</li>
+            </ul>
+            <div style="background:#fef3e2; padding: 16px; border-radius: 24px; margin-top: 15px;">
+                <p><strong>🏆 评价维度：</strong> 美观度30% + 技术应用30% + 创意20% + 团队合作20%。获奖小组获得“UI小能手”称号及小礼品！</p>
+            </div>
+        </div>
+        <p><span class="tip-icon">💬</span> 老师巡场指导，重点帮助遇到报错的同学（比如图片路径不对、状态更新失效等），引导大家看错误提示自己解决。</p>
+    </div>
+
+    <!-- ========= 课堂小结 & 课后任务 ========= -->
+    <div class="section">
+        <h2>📝 课堂小结 & 课后能量包</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h4>✨ 这节课我们解锁了</h4>
+                <ul style="margin-left: 1.2rem;">
+                    <li>✅ Text组件：文字的大小、颜色、对齐方式</li>
+                    <li>✅ Button组件：点击事件、样式美化</li>
+                    <li>✅ Image组件：本地图片/网络图片加载、圆角裁剪</li>
+                    <li>✅ 状态管理：@State让界面“活”起来</li>
+                    <li>✅ 组合布局：Column + Row 搭建完整界面</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>📂 课后必做任务（30分钟内）</h4>
+                <ul>
+                    <li>📌 任务1：完善今天的“个人名片”，增加第三个按钮“改变主题色”，点击后整个卡片背景色变化。</li>
+                    <li>📌 任务2：预习下一节“布局容器：Column、Row、Flex”，思考如何实现两列布局（例如左边头像右边信息）。</li>
+                    <li>📌 任务3：录制2分钟视频，介绍自己设计的卡片亮点，发到学习群。</li>
+                    <li>🌟 挑战任务：尝试使用<code>@Link</code>装饰器（了解父子组件通信），将计数功能提取为子组件。</li>
+                </ul>
+            </div>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">🔔</span> 下节课（第3周 · 星期二 第3-4节）我们将学习<strong>布局容器：Column、Row、Flex</strong>，学会把组件摆得更整齐！记得预习。</p>
+            <p>🏁 鸿蒙开发宣言：每一行代码，都是改变世界的魔法！</p>
+        </div>
+    </div>
+
+    <!-- 导出Word按钮 -->
+    <div class="btn-group">
+        <button class="button" onclick="exportToWord()">📥 导出Word教案（UI组件第1课）</button>
+    </div>
+    <footer>
+        ⚡ 本教案为2课时（80分钟），包含完整代码示例、实训步骤和互动环节，适合零基础集训队。<br>
+        🧑‍🏫 教师可根据课堂节奏适当调整，重点在于让学生“动手看到效果”，建立编程自信。
+    </footer>
+</div>
+
+<script>
+    function exportToWord() {
+        let docHtml = document.documentElement.cloneNode(true);
+        let btnGroup = docHtml.querySelector('.btn-group');
+        if(btnGroup) btnGroup.style.display = 'none';
+        let htmlContent = '<!DOCTYPE html>\n' + docHtml.outerHTML;
+        const blob = new Blob([htmlContent], { type: 'application/msword' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.download = '教案012_基础UI组件_Text_Button_Image.doc';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        alert('教案Word文档已生成，请查收下载文件夹！\n文件名：教案012_基础UI组件_Text_Button_Image.doc');
+    }
+</script>
+</body>
+</html>
