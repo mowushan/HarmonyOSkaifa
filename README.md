@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鸿蒙集训教程包使用说明</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.65;
+            background: #f0f6fc;
+            padding: 30px 20px;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px rgba(0, 40, 60, 0.1);
+            padding: 35px 40px;
+        }
+        h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #0a2e4a, #0078d4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #0066a0;
+            border-bottom: 2px solid #e0edf5;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+        h2 {
+            font-size: 1.5rem;
+            color: #0a4b6e;
+            border-left: 6px solid #0078d4;
+            padding-left: 18px;
+            margin: 25px 0 15px;
+        }
+        h3 {
+            font-size: 1.25rem;
+            color: #1f6392;
+            margin: 20px 0 12px;
+        }
+        .info-box {
+            background: #eef3fc;
+            border-radius: 20px;
+            padding: 20px 25px;
+            margin: 20px 0;
+            border-left: 5px solid #0078d4;
+        }
+        .code-block {
+            background: #1e2f3c;
+            color: #e0f2fe;
+            padding: 15px 20px;
+            border-radius: 16px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        .step-guide {
+            background: #f8fafd;
+            border-radius: 20px;
+            padding: 20px 25px;
+            margin: 15px 0;
+        }
+        .step-guide li {
+            margin-bottom: 12px;
+            margin-left: 25px;
+        }
+        .warning {
+            background: #fff4e6;
+            border-left: 5px solid #ff9800;
+            padding: 15px 20px;
+            border-radius: 16px;
+            margin: 20px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        th {
+            background: #0078d4;
+            color: white;
+            padding: 10px;
+            text-align: left;
+        }
+        td {
+            border: 1px solid #d4e2ef;
+            padding: 10px;
+        }
+        .btn-group {
+            text-align: center;
+            margin: 30px 0 10px;
+        }
+        .button {
+            background: linear-gradient(95deg, #0078d4, #005a9e);
+            border: none;
+            color: white;
+            padding: 10px 28px;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(95deg, #008ae6, #006bb3);
+        }
+        footer {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #6f8ea3;
+            border-top: 1px solid #d4e2ef;
+            padding-top: 20px;
+            margin-top: 30px;
+        }
+        @media (max-width: 680px) {
+            .container { padding: 20px; }
+        }
+    
+            pre, .code-block {
+                white-space: pre-wrap !important;
+                word-wrap: break-word !important;
+                font-family: monospace !important;
+                line-height: 1.5 !important;
+            }
+        </style>
+</head>
+<body>
+<div class="container">
+    <h1>📚 鸿蒙集训教程包 · 使用说明</h1>
+    <div class="subtitle">前四周教程（共26次课）| 学生实训作业保存规范</div>
+
+    <!-- 教程包内容概览 -->
+    <div class="info-box">
+        <p><strong>📦 教程包包含：</strong> 前四周共26次课的HTML教案文件，每份教案包含学习目标、知识讲解、详细实训步骤、代码示例和课后任务。</p>
+        <p><strong>🎯 使用方式：</strong> 学生按教案顺序学习，每完成一次课的实训任务，按要求保存作业，每周五统一提交。</p>
+    </div>
+
+    <!-- 作业保存规范 -->
+    <h2>📁 作业保存规范（重要！）</h2>
+    <div class="step-guide">
+        <p><strong>文件夹结构示例：</strong></p>
+        <pre style="white-space: pre-wrap; word-wrap: break-word; font-family: monospace; line-height: 1.5;" class="code-block">
+📂 张三_鸿蒙实训作业/
+   📂 第1周/
+      📂 第1次课-鸿蒙生态开发大赛介绍与备赛动员/
+         📂 源码/
+            └── 本次课实训代码（如有）.ets
+         📂 截图/
+            ├── 实训任务1.png
+            └── 实训任务2.png
+      📂 第2次课-DevEco Studio安装与配置/
+         📂 截图/
+            ├── 安装成功界面.png
+            └── HelloWorld运行.png
+   📂 第2周/
+      📂 第3次课-ArkTS语言基础：变量与数据类型/
+         📂 源码/
+            └── variables.ets
+         📂 截图/
+            ├── 代码运行结果.png
+      ...（以此类推）
+        </pre>
+    </div>
+
+    <h2>📋 每次课作业包含内容</h2>
+    <table>
+        <thead><tr><th>项目</th><th>要求</th></tr></thead>
+        <tbody>
+            <tr><td><strong>源码文件</strong></td><td>保存本次课编写的所有.ets文件，代码要有必要注释，命名清晰（如 asset_input_page.ets ）</td></tr>
+            <tr><td><strong>运行截图</strong></td><td>2-3张关键界面截图，展示实训任务成果，文件名说明截图内容（如 资产录入页.png）</td></tr>
+            <tr><td><strong>额外说明（可选）</strong></td><td>如有特殊实现或遇到的问题，可附txt说明文件</td></tr>
+        </tbody>
+    </table>
+
+    <h2>✅ 每周提交规范</h2>
+    <div class="info-box">
+        <p><strong>1. 每周五前完成当周作业</strong> — 将当周文件夹（如“第3周”）打包为zip压缩包。</p>
+        <p><strong>2. 命名格式</strong> — <code>姓名_第X周实训作业.zip</code>（例：王嘉鑫_第4周实训作业.zip）</p>
+        <p><strong>3. 提交方式</strong> — 发给各组组长汇总，组长统一交给林泳免老师。</p>
+        <p><strong>4. 检查标准</strong> — 代码能正常运行、截图清晰展示实训要求、文件夹结构规范。</p>
+    </div>
+
+    <!-- 前四周课程清单 -->
+    <h2>📖 前四周课程清单（共26次课）</h2>
+    <div class="step-guide">
+        <p><strong>第1周（2次课）</strong> — 鸿蒙生态开发大赛介绍、DevEco Studio安装配置</p>
+        <p><strong>第2周（8次课）</strong> — ArkTS语法基础、Hello World、面向对象、调试技巧等</p>
+        <p><strong>第3周（8次课）</strong> — ArkUI组件、布局、页面路由、状态管理、资产录入/列表页</p>
+        <p><strong>第4周（8次课）</strong> — 自定义组件、组件通信、资产详情页、动画效果、第二阶段项目展示</p>
+        <p style="margin-top: 12px; color: #0078d4;">📌 第4周第8次课为“第二阶段阶段性项目展示”，需提交完整的资产管理系统界面项目源码+运行截图。</p>
+    </div>
+
+    <!-- 注意事项 -->
+    <h2>⚠️ 重要提醒</h2>
+    <div class="warning">
+        <p><strong>1. 代码要能运行</strong> — 提交前务必在DevEco Studio中测试，确保无语法错误。</p>
+        <p><strong>2. 截图要清晰</strong> — 使用系统截图工具，展示关键界面和交互效果。</p>
+        <p><strong>3. 文件夹命名规范</strong> — 严格按照“第X次课-教案标题”格式，方便老师快速定位。</p>
+        <p><strong>4. 按时提交</strong> — 每周五截止，逾期将影响平时成绩和备赛进度。</p>
+    </div>
+
+    <!-- 常见问题 -->
+    <h2>❓ 常见问题</h2>
+    <div class="info-box">
+        <p><strong>Q：如果某次课没有编写代码，还需要保存什么？</strong><br>
+        A：如第一课主要为理论+账号注册，只需保存截图（如注册成功页面、官网收藏截图）即可。</p>
+        <p><strong>Q：截图需要放在Word里吗？</strong><br>
+        A：不需要，直接放图片在“截图”文件夹中，文件名说明内容即可。</p>
+        <p><strong>Q：源码可以多个文件放在一起吗？</strong><br>
+        A：建议按项目模块分开存放，如果某次课只修改了单个文件，保留该文件即可。</p>
+        <p><strong>Q：作业提交后老师会反馈吗？</strong><br>
+        A：林老师会抽查部分作业，并在下次课集中点评共性问题。</p>
+    </div>
+
+    <!-- 导出按钮 -->
+    <div class="btn-group">
+        <button class="button" onclick="exportToWord()">📥 导出Word版使用说明</button>
+    </div>
+
+    <footer>
+        如有疑问，请及时联系林泳免老师或郑彦孚老师。<br>
+        坚持动手，每天进步一点点，备赛路上我们一起加油！🚀
+    </footer>
+</div>
+
+<script>
+    function exportToWord() {
+        let docHtml = document.documentElement.cloneNode(true);
+        let btnGroup = docHtml.querySelector('.btn-group');
+        if(btnGroup) btnGroup.style.display = 'none';
+        let htmlContent = '<!DOCTYPE html>\n' + docHtml.outerHTML;
+        const blob = new Blob([htmlContent], { type: 'application/msword' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.download = '鸿蒙集训教程包使用说明.doc';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        alert('使用说明已导出为Word文档！');
+    }
+</script>
+</body>
+</html>
