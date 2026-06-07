@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教案033：UI测试与调试技巧 · 让应用更稳更流畅</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
+            line-height: 1.65;
+            color: #1f2d3a;
+            background-color: #f0f6fc;
+            padding: 30px 20px;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px rgba(0, 40, 60, 0.1);
+            overflow: hidden;
+            padding: 30px 35px 50px;
+        }
+        h1 {
+            font-size: 2.4rem;
+            background: linear-gradient(135deg, #0a2e4a, #0078d4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-align: center;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            background: #e9f2fa;
+            display: inline-block;
+            width: auto;
+            margin: 0 auto 20px;
+            padding: 8px 28px;
+            border-radius: 60px;
+            color: #0066a0;
+            font-weight: 500;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .header-meta {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            background: #eef3fc;
+            padding: 12px 20px;
+            border-radius: 40px;
+            margin: 20px 0 30px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #004d7a;
+            border: 1px solid #cde0ef;
+        }
+        .section {
+            background: white;
+            border-radius: 28px;
+            margin-bottom: 35px;
+            padding: 0 5px;
+        }
+        h2 {
+            font-size: 1.8rem;
+            color: #0a4b6e;
+            border-left: 8px solid #0078d4;
+            padding-left: 20px;
+            margin: 30px 0 20px 0;
+            background: linear-gradient(to right, #f0f8ff, #ffffff);
+            border-radius: 0 20px 20px 0;
+        }
+        h3 {
+            font-size: 1.45rem;
+            margin: 25px 0 12px 0;
+            color: #1f6392;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px dotted #b9d9f0;
+            padding-bottom: 8px;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 18px 20px;
+            border: 1px solid #dcecf5;
+            box-shadow: 0 6px 14px rgba(0, 40, 60, 0.05);
+            transition: all 0.2s;
+        }
+        .card:hover {
+            border-color: #0078d4;
+            box-shadow: 0 12px 22px rgba(0, 120, 212, 0.12);
+        }
+        .card h4 {
+            font-size: 1.35rem;
+            color: #005a9c;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 4px solid #0078d4;
+            padding-left: 14px;
+        }
+        .badge {
+            background: #0078d4;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 10px;
+            border-radius: 30px;
+            font-weight: normal;
+            margin-left: 8px;
+        }
+        .task-box {
+            background: #f0f9fe;
+            border-left: 6px solid #28a745;
+            padding: 18px 24px;
+            border-radius: 24px;
+            margin: 20px 0;
+        }
+        .important-note {
+            background: #fff8e7;
+            border-left: 6px solid #ff9800;
+            padding: 18px 24px;
+            border-radius: 24px;
+            margin: 20px 0;
+        }
+        .code-block {
+            background: #1e2f3c;
+            color: #e0f2fe;
+            padding: 16px 22px;
+            border-radius: 20px;
+            font-family: 'JetBrains Mono', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 5px solid #0078d4;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .code-block .keyword { color: #ff9d5a; font-weight: bold; }
+        .code-block .comment { color: #6a9955; }
+        .code-block .string { color: #ce9178; }
+        .code-block .number { color: #b5cea8; }
+        .step-guide {
+            background: #f8fafd;
+            border-radius: 28px;
+            padding: 20px 28px;
+            counter-reset: step-counter;
+            list-style: none;
+        }
+        .step-guide li {
+            counter-increment: step-counter;
+            margin-bottom: 20px;
+            padding-left: 52px;
+            position: relative;
+            font-weight: 500;
+        }
+        .step-guide li::before {
+            content: counter(step-counter);
+            background: #0078d4;
+            color: white;
+            width: 34px;
+            height: 34px;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            left: 0;
+            top: -2px;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px 0 20px;
+        }
+        .button {
+            background: linear-gradient(95deg, #0078d4, #005a9e);
+            border: none;
+            color: white;
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 5px 12px rgba(0, 90, 158, 0.3);
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(95deg, #008ae6, #006bb3);
+            box-shadow: 0 10px 20px rgba(0, 90, 158, 0.4);
+        }
+        .tip-icon {
+            font-size: 1.4rem;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #6f8ea3;
+            border-top: 1px solid #d4e2ef;
+            padding-top: 25px;
+            margin-top: 35px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        th {
+            background: #0078d4;
+            color: white;
+            padding: 10px;
+            font-weight: 600;
+        }
+        td {
+            border: 1px solid #cfdfec;
+            padding: 10px;
+        }
+        @media (max-width: 680px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.9rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🔍 UI测试与调试技巧 · 让应用更稳更流畅</h1>
+    <div style="text-align: center;">
+        <span class="subtitle">🐞 学会给代码“看病” · 成为调试高手</span>
+    </div>
+    <div class="header-meta">
+        <span>📅 第5周 · 星期四 第5-6节 (12:30-14:00)</span>
+        <span>⏱️ 2课时 (80分钟)  |  💻 理实一体化 · 实训为主</span>
+        <span>🎯 授课对象：鸿蒙集训队 · 已有界面基础</span>
+    </div>
+
+    <!-- ========= 学习目标卡片 ========= -->
+    <div class="section">
+        <h2>🎯 学习目标 · 这堂课我们要拿下什么？</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h4>📘 知识点1 <span class="badge">UI测试是什么</span></h4>
+                <p><strong>学到：</strong> UI测试就是“考验界面是否按预期工作”，包括组件显示、点击响应、页面跳转等。</p>
+                <p>💡 类比：就像质检员检查手机屏幕——点一下按钮，应该有反应！</p>
+            </div>
+            <div class="card">
+                <h4>🛠️ 技能点1 <span class="badge">手动UI测试</span></h4>
+                <p><strong>学会：</strong> 通过真机/模拟器逐一点击组件，记录异常行为，形成测试清单。</p>
+            </div>
+            <div class="card">
+                <h4>📘 知识点2 <span class="badge">调试基础</span></h4>
+                <p><strong>学到：</strong> 断点、单步执行、变量监视，让程序暂停“看病”。</p>
+            </div>
+            <div class="card">
+                <h4>🛠️ 技能点2 <span class="badge">DevEco调试器</span></h4>
+                <p><strong>学会：</strong> 在DevEco Studio中断点调试，查看变量值，定位界面bug。</p>
+            </div>
+            <div class="card">
+                <h4>📘 知识点3 <span class="badge">常见UI问题</span></h4>
+                <p><strong>学到：</strong> 布局错位、点击无反应、数据不刷新、闪退等典型症状。</p>
+            </div>
+            <div class="card">
+                <h4>🛠️ 技能点3 <span class="badge">日志调试</span></h4>
+                <p><strong>学会：</strong> 使用console.log()/hilog打印关键信息，快速定位错误位置。</p>
+            </div>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">💡</span> <strong>老师的话：</strong> 真正的开发高手，一半时间在写代码，一半时间在调试。今天我们就用实战方式，学会“给鸿蒙应用看病”！</p>
+        </div>
+    </div>
+
+    <!-- ========= 知识讲解 · 趣味易懂 ========= -->
+    <div class="section">
+        <h2>🧩 知识讲解 · UI测试与调试工具箱</h2>
+        
+        <h3>1. UI测试——给界面做“体检”</h3>
+        <div class="task-box">
+            <p><span class="tip-icon">🖥️</span> <strong>什么是UI测试？</strong> 就是手动或自动检查每个界面元素是否正常工作。</p>
+            <p><strong>为什么要做？</strong> 防止“用户点按钮没反应”、“列表显示不全”、“跳转闪退”等尴尬问题。</p>
+            <p><strong>测试清单（我们手动做）：</strong></p>
+            <ul>
+                <li>✅ 每个按钮/文本输入框是否可见、可点</li>
+                <li>✅ 页面跳转是否携带正确数据</li>
+                <li>✅ 列表滚动是否流畅</li>
+                <li>✅ 不同屏幕尺寸下布局是否错位</li>
+            </ul>
+        </div>
+
+        <h3>2. DevEco Studio 调试神器——断点+监视</h3>
+        <div class="card-grid">
+            <div class="card">
+                <h4>🔴 断点（Breakpoint）</h4>
+                <p>在代码行号旁单击，程序运行到此处会“暂停”，让你观察当前状态。</p>
+            </div>
+            <div class="card">
+                <h4>▶️ 单步执行（Step Over）</h4>
+                <p>一行一行执行代码，追踪执行路径。</p>
+            </div>
+            <div class="card">
+                <h4>👁️ 变量监视（Watch）</h4>
+                <p>查看变量当前的值，检查是否符合预期。</p>
+            </div>
+        </div>
+
+        <h3>3. 日志调试——最直接的“侦查手段”</h3>
+        <div class="code-block">
+<span class="comment">// ArkTS中打印日志（类似Python的print）</span>
+<span class="keyword">console</span>.log(<span class="string">"按钮被点击了！当前计数："</span> + count);
+
+<span class="comment">// 鸿蒙官方推荐 hilog（更强大）</span>
+<span class="keyword">import</span> { hilog } <span class="keyword">from</span> <span class="string">'@ohos.hilog'</span>;
+hilog.info(0x0000, <span class="string">'MyApp'</span>, <span class="string">'用户点击了登录按钮'</span>);
+        </div>
+        <p><strong>小技巧：</strong> 日志就像“探照灯”，在关键位置打印变量值，能帮你快速找到哪里出错了。</p>
+    </div>
+
+    <!-- ========= 超详细实训指导 ========= -->
+    <div class="section">
+        <h2>⚙️ 技能实训 · 实战演练：调试资产录入页面</h2>
+        <p style="background:#e2f0fe; border-radius: 40px; padding: 8px 20px; display: inline-block; margin-bottom: 15px;">✅ 本次实训目标：学会打断点、看日志、修复UI常见bug</p>
+
+        <h3>🔧 实训准备：打开上阶段的“资产录入”项目</h3>
+        <div class="step-guide">
+            <li>在DevEco Studio中打开你的 <strong>AssetManagement</strong> 项目（如果没有，老师会提供基础模板）。</li>
+            <li>确保可以运行在模拟器或真机上。</li>
+            <li>找到 <code>pages/AddAsset.ets</code> 文件（资产录入页）。</li>
+        </div>
+
+        <h3>🧪 实训任务一：手动UI测试 · 找茬大挑战（15分钟）</h3>
+        <div class="step-guide">
+            <li><strong>测试清单：</strong> 运行App，进入“资产录入”页面，依次测试：输入框能否输入、提交按钮是否响应、返回按钮是否正常。</li>
+            <li><strong>故意制造“bug”体验：</strong> 老师提供一个有bug版本（比如按钮无反应、输入框无法聚焦），分组找出所有问题，记录在“bug清单”中。</li>
+            <li><strong>汇报展示：</strong> 每组派代表说明发现了哪些问题，老师总结常见UI问题类型。</li>
+        </div>
+        <div class="task-box">
+            <p><span class="tip-icon">🐞</span> <strong>常见UI Bug示例：</strong></p>
+            <ul>
+                <li>按钮绑定了错误的事件方法</li>
+                <li>输入框没有绑定 @State 变量</li>
+                <li>页面跳转时路由路径写错</li>
+                <li>布局未设置宽高导致组件消失</li>
+            </ul>
+        </div>
+
+        <h3>🧪 实训任务二：日志调试 · 给代码装“摄像头”（20分钟）</h3>
+        <div class="step-guide">
+            <li><strong>在提交按钮的点击事件中添加日志：</strong> 在 <code>AddAsset.ets</code> 中找到 <code>Button</code> 的 <code>onClick</code>，添加如下代码：
+                <div class="code-block" style="margin-top:8px;">
+<span class="keyword">Button</span>(<span class="string">'提交资产'</span>)
+    .onClick(() => {
+        <span class="comment">// 添加日志，观察是否执行到这里</span>
+        console.log(<span class="string">"提交按钮被点击了"</span>);
+        console.log(<span class="string">"资产名称："</span> + <span class="keyword">this</span>.assetName);
+        <span class="comment">// ... 原有保存逻辑</span>
+    })
+                </div>
+            </li>
+            <li><strong>运行并点击按钮，查看“Log”面板（底部Console）：</strong> 观察日志是否输出，变量值是否正确。</li>
+            <li><strong>故意制造错误：</strong> 注释掉变量声明，看控制台报错信息，学会读“红色错误提示”。</li>
+            <li><strong>小组任务：</strong> 在页面加载时（aboutToAppear）也添加日志，验证生命周期是否执行。</li>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">📢</span> 调试口诀：<strong>“日志加得妙，bug跑不掉；变量打印全，问题一眼见！”</strong></p>
+        </div>
+
+        <h3>🧪 实训任务三：断点调试 · 让程序“暂停”看病（25分钟）</h3>
+        <div class="step-guide">
+            <li><strong>设置断点：</strong> 在 <code>onClick</code> 回调的第一行代码左边单击，出现红色圆点。</li>
+            <li><strong>以调试模式运行：</strong> 点击虫子图标 “Debug” 按钮，程序启动后会停在断点处。</li>
+            <li><strong>单步执行：</strong> 按 F8 逐行执行，观察变量面板中 <code>this.assetName</code> 的值变化。</li>
+            <li><strong>修改变量值：</strong> 在调试过程中，可以右键变量选择 “Set Value”，临时修改，测试不同分支逻辑。</li>
+            <li><strong>分组挑战：</strong> 给“表单验证”函数添加断点，观察当输入为空时，验证逻辑是否正确触发。</li>
+        </div>
+        <div class="code-block">
+<span class="comment">// 示例：表单验证函数</span>
+validateForm(): boolean {
+    <span class="keyword">if</span> (<span class="keyword">this</span>.assetName === <span class="string">''</span>) {
+        console.log(<span class="string">"资产名称为空，无法提交"</span>);
+        <span class="keyword">return</span> <span class="keyword">false</span>;
+    }
+    <span class="keyword">return</span> <span class="keyword">true</span>;
+}
+        </div>
+        <div class="task-box">
+            <p>✅ <strong>调试成功标志：</strong> 能在断点处看到变量，并能单步执行，观察到执行路径。</p>
+        </div>
+
+        <h3>🧪 实训任务四：修复一个真实Bug · 界面不刷新问题（15分钟）</h3>
+        <div class="step-guide">
+            <li><strong>场景：</strong> 提交资产后，列表页没有立即显示新数据。这是典型“数据没刷新”问题。</li>
+            <li><strong>定位方法：</strong> 在列表页的 <code>aboutToAppear()</code> 和数据加载函数中添加日志，确认是否重新加载。</li>
+            <li><strong>解决方案：</strong> 使用状态管理（@State）或事件通知（emitter）触发列表刷新。老师演示一种简单修复：提交后重新查询数据库并更新列表状态。</li>
+            <li><strong>动手修复：</strong> 每组尝试修改代码，让提交后列表自动显示新资产。成功后老师验收。</li>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">🏆</span> <strong>终极挑战：</strong> 自己制造一个界面Bug（如按钮点一次后消失），然后利用调试工具找到原因并修复。看谁最快！</p>
+        </div>
+    </div>
+
+    <!-- ========= 互动活动 · 调试大闯关 ========= -->
+    <div class="section">
+        <h2>🎮 互动活动 · 代码急诊室</h2>
+        <div class="task-box">
+            <h3 style="margin-top:0;">「我是小医生」bug修复竞赛</h3>
+            <p><strong>活动规则：</strong></p>
+            <ol>
+                <li>老师提供3个含有“UI故障”的鸿蒙工程（不同小组拿不同bug）。</li>
+                <li>每组需要在15分钟内利用今天的调试技巧（日志+断点）定位问题，并写出修复方案。</li>
+                <li>每组派代表上台讲解：bug现象 → 如何定位 → 修复代码。</li>
+                <li>全班投票选出“最佳诊断师”小组。</li>
+            </ol>
+            <div style="background:#fef3e2; padding: 16px; border-radius: 24px; margin-top: 15px;">
+                <p><strong>🏆 奖项设置：</strong> “最快修复奖”、“最清晰讲解奖”、“最巧妙方法奖”。</p>
+                <p><strong>示例Bug：</strong> 点击“添加资产”按钮后，页面跳转但资产列表不更新；输入框无法聚焦等。</p>
+            </div>
+        </div>
+        <p><span class="tip-icon">💬</span> 老师点评：强调“调试是开发的核心能力”，今天掌握的技巧将伴随整个职业生涯。</p>
+    </div>
+
+    <!-- ========= 课堂小结 & 课后任务 ========= -->
+    <div class="section">
+        <h2>📝 课堂小结 & 课后能量包</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h4>✨ 这节课我们解锁了</h4>
+                <ul style="margin-left: 1.2rem;">
+                    <li>✅ UI测试的目的和手动测试方法</li>
+                    <li>✅ 日志调试：console.log 和 hilog</li>
+                    <li>✅ 断点调试：暂停程序、单步执行、监视变量</li>
+                    <li>✅ 修复真实Bug：界面不刷新、点击无响应等</li>
+                    <li>✅ 团队协作解决代码故障</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>📂 课后必做任务（30分钟）</h4>
+                <ul>
+                    <li>📌 任务1：为自己写的“资产列表页”添加至少3处关键日志，并截图日志输出。</li>
+                    <li>📌 任务2：使用断点调试，追踪一次“编辑资产”功能，观察数据流向。</li>
+                    <li>📌 任务3：写一篇“调试心得”小短文（100字），分享今天遇到最难忘的一个bug及解决过程。</li>
+                    <li>🌟 挑战任务：预习“性能分析工具”，了解如何检测UI卡顿。</li>
+                </ul>
+            </div>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">🔔</span> 下节课（第5周 周四第7-8节 15:50-17:20）我们将学习 <strong>性能优化：启动速度与响应优化</strong>，提前预习内存管理概念！</p>
+            <p>🏁 记住：<strong>调试不是失败，而是更深入地理解代码！</strong></p>
+        </div>
+    </div>
+
+    <!-- 导出Word按钮 -->
+    <div class="btn-group">
+        <button class="button" onclick="exportToWord()">📥 导出Word教案（UI测试与调试技巧）</button>
+    </div>
+    <footer>
+        ⚡ 本教案为2课时（80分钟），包含完整实训步骤、代码示例、互动活动，适合投影教学。<br>
+        🧑‍🏫 教师可根据学生进度适当调整，重点在于让学生动手体验调试工具的强大。
+    </footer>
+</div>
+
+<script>
+    function exportToWord() {
+        // 获取当前页面的完整html结构
+        let docHtml = document.documentElement.cloneNode(true);
+        // 移除导出按钮避免递归，保留样式
+        let btnGroup = docHtml.querySelector('.btn-group');
+        if(btnGroup) btnGroup.style.display = 'none';
+        let htmlContent = '<!DOCTYPE html>\n' + docHtml.outerHTML;
+        const blob = new Blob([htmlContent], { type: 'application/msword' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.download = '教案033_UI测试与调试技巧.doc';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        alert('教案Word文档已生成，请查收下载文件夹！\n文件名：教案033_UI测试与调试技巧.doc');
+    }
+</script>
+</body>
+</html>

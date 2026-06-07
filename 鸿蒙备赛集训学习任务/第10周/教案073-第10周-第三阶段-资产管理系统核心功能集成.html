@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教案073：资产管理系统核心功能集成</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
+            line-height: 1.65;
+            color: #1f2d3a;
+            background-color: #f0f6fc;
+            padding: 30px 20px;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px rgba(0, 40, 60, 0.1);
+            overflow: hidden;
+            padding: 30px 35px 50px;
+        }
+        h1 {
+            font-size: 2.4rem;
+            background: linear-gradient(135deg, #0a2e4a, #0078d4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-align: center;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            background: #e9f2fa;
+            display: inline-block;
+            width: auto;
+            margin: 0 auto 20px;
+            padding: 8px 28px;
+            border-radius: 60px;
+            color: #0066a0;
+            font-weight: 500;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .header-meta {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            background: #eef3fc;
+            padding: 12px 20px;
+            border-radius: 40px;
+            margin: 20px 0 30px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #004d7a;
+            border: 1px solid #cde0ef;
+        }
+        .section {
+            background: white;
+            border-radius: 28px;
+            margin-bottom: 35px;
+            padding: 0 5px;
+        }
+        h2 {
+            font-size: 1.8rem;
+            color: #0a4b6e;
+            border-left: 8px solid #0078d4;
+            padding-left: 20px;
+            margin: 30px 0 20px 0;
+            background: linear-gradient(to right, #f0f8ff, #ffffff);
+            border-radius: 0 20px 20px 0;
+        }
+        h3 {
+            font-size: 1.45rem;
+            margin: 25px 0 12px 0;
+            color: #1f6392;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px dotted #b9d9f0;
+            padding-bottom: 8px;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 18px 20px;
+            border: 1px solid #dcecf5;
+            box-shadow: 0 6px 14px rgba(0, 40, 60, 0.05);
+            transition: all 0.2s;
+        }
+        .card:hover {
+            border-color: #0078d4;
+            box-shadow: 0 12px 22px rgba(0, 120, 212, 0.12);
+        }
+        .card h4 {
+            font-size: 1.35rem;
+            color: #005a9c;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 4px solid #0078d4;
+            padding-left: 14px;
+        }
+        .badge {
+            background: #0078d4;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 10px;
+            border-radius: 30px;
+            font-weight: normal;
+            margin-left: 8px;
+        }
+        .task-box {
+            background: #f0f9fe;
+            border-left: 6px solid #28a745;
+            padding: 18px 24px;
+            border-radius: 24px;
+            margin: 20px 0;
+        }
+        .important-note {
+            background: #fff8e7;
+            border-left: 6px solid #ff9800;
+            padding: 18px 24px;
+            border-radius: 24px;
+            margin: 20px 0;
+        }
+        .code-block {
+            background: #1e2f3c;
+            color: #e0f2fe;
+            padding: 16px 22px;
+            border-radius: 20px;
+            font-family: 'JetBrains Mono', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 5px solid #0078d4;
+            white-space: pre-wrap;
+            word-break: break-word;
+            line-height: 1.45;
+        }
+        .code-block pre {
+            margin: 0;
+            font-family: inherit;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .step-guide {
+            background: #f8fafd;
+            border-radius: 28px;
+            padding: 20px 28px;
+            counter-reset: step-counter;
+            list-style: none;
+        }
+        .step-guide li {
+            counter-increment: step-counter;
+            margin-bottom: 20px;
+            padding-left: 52px;
+            position: relative;
+            font-weight: 500;
+        }
+        .step-guide li::before {
+            content: counter(step-counter);
+            background: #0078d4;
+            color: white;
+            width: 34px;
+            height: 34px;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            left: 0;
+            top: -2px;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px 0 20px;
+        }
+        .button {
+            background: linear-gradient(95deg, #0078d4, #005a9e);
+            border: none;
+            color: white;
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 5px 12px rgba(0, 90, 158, 0.3);
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(95deg, #008ae6, #006bb3);
+            box-shadow: 0 10px 20px rgba(0, 90, 158, 0.4);
+        }
+        .tip-icon {
+            font-size: 1.4rem;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #6f8ea3;
+            border-top: 1px solid #d4e2ef;
+            padding-top: 25px;
+            margin-top: 35px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        th {
+            background: #0078d4;
+            color: white;
+            padding: 10px;
+            font-weight: 600;
+        }
+        td {
+            border: 1px solid #cfdfec;
+            padding: 10px;
+        }
+        @media (max-width: 680px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.9rem; }
+        }
+        .file-structure {
+            background: #f4f9ff;
+            border-radius: 20px;
+            padding: 15px 20px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🔧 资产管理系统 · 核心功能集成</h1>
+    <div style="text-align: center;">
+        <span class="subtitle">🏗️ 将数据存储、网络请求与界面模块合为一体</span>
+    </div>
+    <div class="header-meta">
+        <span>📅 第10周 · 星期四 第5-6节 (12:30-14:00)</span>
+        <span>⏱️ 2课时 (80分钟)  |  💻 理实一体化 · 代码实战</span>
+        <span>🎯 授课对象：技师学院 · 鸿蒙集训队</span>
+    </div>
+
+    <!-- ========= 学习目标卡片 ========= -->
+    <div class="section">
+        <h2>🎯 学习目标 · 这堂课我们要拿下什么？</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h4>📘 知识点1 <span class="badge">模块集成</span></h4>
+                <p><strong>学到：</strong> 理解模块化开发思想，知道如何将数据库模块、网络模块、UI模块有机整合。</p>
+                <p>💡 类比：就像拼乐高，每个模块是独立零件，我们要把它们拼成完整作品。</p>
+            </div>
+            <div class="card">
+                <h4>🛠️ 技能点1 <span class="badge">代码整合</span></h4>
+                <p><strong>学会：</strong> 将之前分散开发的资产录入、列表展示、数据存储功能整合到一个完整应用中。</p>
+            </div>
+            <div class="card">
+                <h4>📘 知识点2 <span class="badge">数据流设计</span></h4>
+                <p><strong>学到：</strong> 理解应用中数据的流向：用户输入 → 存储 → 查询 → 展示。</p>
+            </div>
+            <div class="card">
+                <h4>🛠️ 技能点2 <span class="badge">页面联动</span></h4>
+                <p><strong>学会：</strong> 实现录入页保存后自动刷新列表页，详情页编辑后同步更新。</p>
+            </div>
+            <div class="card">
+                <h4>📘 知识点3 <span class="badge">代码复用</span></h4>
+                <p><strong>学到：</strong> 抽取公共代码（如数据库帮助类、网络请求封装）避免重复。</p>
+            </div>
+            <div class="card">
+                <h4>🛠️ 技能点3 <span class="badge">完整Demo</span></h4>
+                <p><strong>学会：</strong> 运行出一个功能完整的资产管理Demo：增、删、改、查、云端同步雏形。</p>
+            </div>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">💡</span> <strong>老师暖心提示：</strong> 这是第三阶段的“大汇总”课！前几周我们分别学了UI、数据库、网络，今天要把它们全部串起来。代码量会比较大，但不要怕，跟着步骤走，跑通的那一刻成就感爆棚！</p>
+        </div>
+    </div>
+
+    <!-- ========= 知识讲解 ========= -->
+    <div class="section">
+        <h2>🧩 知识讲解 · 核心功能集成思路</h2>
+        
+        <h3>1. 整体架构回顾 · 三大模块协同工作</h3>
+        <div class="task-box">
+            <p><span class="tip-icon">🏗️</span> <strong>我们的资产管理系统包含三大模块：</strong></p>
+            <ul>
+                <li><strong>📱 UI模块（界面层）</strong>：资产录入页、资产列表页、资产详情/编辑页</li>
+                <li><strong>💾 数据模块（数据层）</strong>：数据库帮助类（增删改查）、Preferences存储（设置）</li>
+                <li><strong>🌐 网络模块（服务层）</strong>：HTTP请求封装、JSON解析、云端数据同步</li>
+            </ul>
+            <p><strong>数据流向图：</strong></p>
+            <div class="file-structure">
+录入页(输入) → 数据验证 → 调用数据库帮助类.save() → 存入本地SQLite<br>
+列表页启动 → 调用数据库帮助类.queryAll() → 获取资产列表 → UI展示<br>
+详情页编辑 → 调用数据库帮助类.update() → 更新本地数据 → 可选同步到云端<br>
+云端获取 → 调用网络模块.fetchRemote() → JSON解析 → 合并本地数据
+            </div>
+        </div>
+
+        <h3>2. 模块集成关键点 · 页面间数据传递</h3>
+        <div class="card-grid">
+            <div class="card">
+                <h4>📤 路由传参</h4>
+                <p>列表页点击某条资产，需要把资产ID传给详情页，详情页根据ID查询数据库展示。</p>
+            </div>
+            <div class="card">
+                <h4>🔄 页面刷新</h4>
+                <p>录入新资产后，返回列表页需要自动刷新列表。使用 @State + 事件总线 或 router.back() 携带刷新标识。</p>
+            </div>
+            <div class="card">
+                <h4>🔁 数据同步</h4>
+                <p>本地存储为主，云端为辅。增删改操作同时更新本地和云端（异步）。</p>
+            </div>
+        </div>
+
+        <h3>3. 核心代码结构预览</h3>
+        <div class="code-block">
+            <pre>📁 entry/src/main/ets/
+├── 📁 pages/
+│   ├── AssetListPage.ets      // 资产列表页（首页）
+│   ├── AssetAddPage.ets       // 资产录入页
+│   └── AssetDetailPage.ets    // 资产详情/编辑页
+├── 📁 common/
+│   ├── DatabaseHelper.ets     // 数据库帮助类
+│   ├── AssetModel.ets         // 资产数据模型
+│   └── HttpHelper.ets         // 网络请求封装
+└── 📁 viewmodel/
+    └── AssetViewModel.ets      // 视图模型（可选）</pre>
+        </div>
+    </div>
+
+    <!-- ========= 超详细实训指导 ========= -->
+    <div class="section">
+        <h2>⚙️ 技能实训 · 动手集成核心功能</h2>
+        <p style="background:#e2f0fe; border-radius: 40px; padding: 8px 20px; display: inline-block; margin-bottom: 15px;">✅ 实训目标：将分散的模块整合成一个可运行的完整应用</p>
+
+        <h3>📁 实训准备：创建项目结构</h3>
+        <div class="step-guide">
+            <li><strong>打开 DevEco Studio</strong>，使用之前的 HarmonyOS 项目（或新建一个）。</li>
+            <li><strong>按照上述目录结构</strong> 在 `entry/src/main/ets/` 下创建 pages、common、viewmodel 文件夹。</li>
+            <li><strong>将之前写的代码文件</strong> 复制到对应目录（例如数据库操作代码放入 DatabaseHelper.ets）。</li>
+            <li><strong>检查 import 路径</strong>，确保所有引用正确（IDE 会有红色提示，鼠标悬停查看建议）。</li>
+        </div>
+
+        <h3>🧪 实训任务一：完善数据库帮助类（15分钟）</h3>
+        <div class="task-box">
+            <p><strong>DatabaseHelper.ets 核心代码（教师投影展示，学生逐行理解）：</strong></p>
+        </div>
+        <div class="code-block">
+            <pre>import relationalStore from '@ohos.data.relationalStore';
+import { AssetModel } from './AssetModel';
+
+const SQL_CREATE_TABLE = `
+    CREATE TABLE IF NOT EXISTS assets (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        category TEXT,
+        quantity INTEGER DEFAULT 1,
+        price REAL,
+        purchaseDate TEXT,
+        remark TEXT
+    )
+`;
+
+export class DatabaseHelper {
+    private static instance: DatabaseHelper;
+    private rdbStore: relationalStore.RdbStore | null = null;
+
+    static getInstance(): DatabaseHelper {
+        if (!DatabaseHelper.instance) {
+            DatabaseHelper.instance = new DatabaseHelper();
+        }
+        return DatabaseHelper.instance;
+    }
+
+    async init(context: Context): Promise&lt;void&gt; {
+        const config = {
+            name: 'asset.db',
+            securityLevel: relationalStore.SecurityLevel.S1
+        };
+        this.rdbStore = await relationalStore.getRdbStore(context, config);
+        await this.rdbStore.executeSql(SQL_CREATE_TABLE);
+        console.info('数据库初始化成功');
+    }
+
+    // 插入资产
+    async insertAsset(asset: AssetModel): Promise&lt;number&gt; {
+        if (!this.rdbStore) throw new Error('数据库未初始化');
+        const valueBucket = {
+            name: asset.name,
+            category: asset.category,
+            quantity: asset.quantity,
+            price: asset.price,
+            purchaseDate: asset.purchaseDate,
+            remark: asset.remark
+        };
+        return await this.rdbStore.insert('assets', valueBucket);
+    }
+
+    // 查询所有资产
+    async queryAllAssets(): Promise&lt;AssetModel[]&gt; {
+        if (!this.rdbStore) return [];
+        const predicates = new relationalStore.RdbPredicates('assets');
+        const resultSet = await this.rdbStore.query(predicates);
+        const assets: AssetModel[] = [];
+        while (resultSet.goToNextRow()) {
+            assets.push({
+                id: resultSet.getLong(resultSet.getColumnIndex('id')),
+                name: resultSet.getString(resultSet.getColumnIndex('name')),
+                category: resultSet.getString(resultSet.getColumnIndex('category')),
+                quantity: resultSet.getLong(resultSet.getColumnIndex('quantity')),
+                price: resultSet.getDouble(resultSet.getColumnIndex('price')),
+                purchaseDate: resultSet.getString(resultSet.getColumnIndex('purchaseDate')),
+                remark: resultSet.getString(resultSet.getColumnIndex('remark'))
+            });
+        }
+        resultSet.close();
+        return assets;
+    }
+
+    // 更新资产
+    async updateAsset(asset: AssetModel): Promise&lt;number&gt; {
+        if (!this.rdbStore) throw new Error('数据库未初始化');
+        const valueBucket = {
+            name: asset.name,
+            category: asset.category,
+            quantity: asset.quantity,
+            price: asset.price,
+            purchaseDate: asset.purchaseDate,
+            remark: asset.remark
+        };
+        const predicates = new relationalStore.RdbPredicates('assets');
+        predicates.equalTo('id', asset.id);
+        return await this.rdbStore.update(valueBucket, predicates);
+    }
+
+    // 删除资产
+    async deleteAsset(id: number): Promise&lt;number&gt; {
+        if (!this.rdbStore) throw new Error('数据库未初始化');
+        const predicates = new relationalStore.RdbPredicates('assets');
+        predicates.equalTo('id', id);
+        return await this.rdbStore.delete(predicates);
+    }
+}</pre>
+        </div>
+        <p><strong>💡 学生任务：</strong> 在各自项目中创建该文件，并确保没有语法错误（IDE会提示，大胆尝试）。</p>
+
+        <h3>🧪 实训任务二：资产列表页集成数据库（20分钟）</h3>
+        <div class="step-guide">
+            <li><strong>修改 AssetListPage.ets</strong>，在 aboutToAppear() 生命周期中调用数据库查询。</li>
+            <li><strong>定义 @State assets: AssetModel[] = []</strong>，存储查询结果。</li>
+            <li><strong>创建 loadData() 方法</strong>，调用 DatabaseHelper.getInstance().queryAllAssets() 并更新状态。</li>
+            <li><strong>使用 List 组件渲染资产列表</strong>，每个 Item 显示名称、数量、价格。</li>
+            <li><strong>添加“添加资产”按钮</strong>，点击跳转到 AssetAddPage，并监听返回刷新。</li>
+        </div>
+        <div class="code-block">
+            <pre>import router from '@ohos.router';
+import { DatabaseHelper } from '../common/DatabaseHelper';
+import { AssetModel } from '../common/AssetModel';
+
+@Entry
+@Component
+struct AssetListPage {
+    @State assets: AssetModel[] = [];
+
+    aboutToAppear() {
+        this.loadData();
+    }
+
+    async loadData() {
+        try {
+            this.assets = await DatabaseHelper.getInstance().queryAllAssets();
+        } catch (err) {
+            console.error('加载数据失败：' + err);
+        }
+    }
+
+    onPageShow() {
+        // 从其他页面返回时刷新列表（录入/编辑后）
+        this.loadData();
+    }
+
+    build() {
+        Column() {
+            Row() {
+                Text('资产管理')
+                    .fontSize(24)
+                    .fontWeight(FontWeight.Bold)
+                Blank()
+                Button('+ 添加资产')
+                    .onClick(() => {
+                        router.pushUrl({ url: 'pages/AssetAddPage' });
+                    })
+            }
+            .width('100%')
+            .padding(12)
+
+            List() {
+                ForEach(this.assets, (asset: AssetModel) => {
+                    ListItem() {
+                        Row() {
+                            Column() {
+                                Text(asset.name)
+                                    .fontSize(18)
+                                    .fontWeight(FontWeight.Medium)
+                                Text(`数量：${asset.quantity}  价格：¥${asset.price}`)
+                                    .fontSize(14)
+                                    .fontColor('#666')
+                            }
+                            .alignItems(HorizontalAlign.Start)
+                            .layoutWeight(1)
+                            Text('详情')
+                                .fontColor('#0078d4')
+                                .onClick(() => {
+                                    router.pushUrl({
+                                        url: 'pages/AssetDetailPage',
+                                        params: { id: asset.id }
+                                    });
+                                })
+                        }
+                        .width('100%')
+                        .padding(12)
+                        .justifyContent(FlexAlign.SpaceBetween)
+                    }
+                })
+            }
+            .layoutWeight(1)
+        }
+        .width('100%')
+        .height('100%')
+    }
+}</pre>
+        </div>
+
+        <h3>🧪 实训任务三：资产录入页集成存储（15分钟）</h3>
+        <div class="step-guide">
+            <li><strong>创建 AssetAddPage.ets</strong>，包含表单输入框（名称、分类、数量、价格等）。</li>
+            <li><strong>使用 @State 绑定输入值</strong>，如 @State name: string = ''。</li>
+            <li><strong>实现保存按钮逻辑</strong>：校验输入 → 构造 AssetModel → 调用 insertAsset → 返回上一页。</li>
+            <li><strong>返回时携带刷新标识</strong>：router.back() 会自动触发列表页 onPageShow。</li>
+        </div>
+        <div class="code-block">
+            <pre>import router from '@ohos.router';
+import { DatabaseHelper } from '../common/DatabaseHelper';
+import { AssetModel } from '../common/AssetModel';
+
+@Entry
+@Component
+struct AssetAddPage {
+    @State name: string = '';
+    @State category: string = '';
+    @State quantity: string = '';
+    @State price: string = '';
+    @State purchaseDate: string = '';
+    @State remark: string = '';
+
+    async saveAsset() {
+        if (!this.name.trim()) {
+            alert('请填写资产名称');
+            return;
+        }
+        const asset: AssetModel = {
+            name: this.name,
+            category: this.category,
+            quantity: parseInt(this.quantity) || 0,
+            price: parseFloat(this.price) || 0,
+            purchaseDate: this.purchaseDate,
+            remark: this.remark
+        };
+        try {
+            await DatabaseHelper.getInstance().insertAsset(asset);
+            router.back();  // 保存成功，返回列表页
+        } catch (err) {
+            alert('保存失败：' + err);
+        }
+    }
+
+    build() {
+        Column() {
+            Text('添加资产')
+                .fontSize(24)
+                .fontWeight(FontWeight.Bold)
+                .margin({ bottom: 20 })
+
+            TextInput({ placeholder: '资产名称', text: this.name })
+                .onChange((val) => this.name = val)
+            TextInput({ placeholder: '分类', text: this.category })
+                .onChange((val) => this.category = val)
+            TextInput({ placeholder: '数量', text: this.quantity })
+                .type(InputType.Number)
+                .onChange((val) => this.quantity = val)
+            TextInput({ placeholder: '单价', text: this.price })
+                .type(InputType.Number)
+                .onChange((val) => this.price = val)
+            TextInput({ placeholder: '购买日期', text: this.purchaseDate })
+                .onChange((val) => this.purchaseDate = val)
+            TextArea({ placeholder: '备注', text: this.remark })
+                .onChange((val) => this.remark = val)
+
+            Button('保存资产')
+                .width('100%')
+                .margin({ top: 20 })
+                .onClick(() => this.saveAsset())
+        }
+        .padding(20)
+        .width('100%')
+        .height('100%')
+    }
+}</pre>
+        </div>
+
+        <h3>🧪 实训任务四：资产详情/编辑页（10分钟）</h3>
+        <div class="step-guide">
+            <li><strong>创建 AssetDetailPage.ets</strong>，从路由参数获取 assetId。</li>
+            <li><strong>在 aboutToAppear 中根据 ID 查询详情</strong>，并填充到 @State 变量。</li>
+            <li><strong>实现“编辑”模式</strong>：点击编辑按钮启用输入框，保存时调用 updateAsset。</li>
+            <li><strong>添加“删除”按钮</strong>，调用 deleteAsset 后返回列表页。</li>
+        </div>
+        <div class="code-block">
+            <pre>import router from '@ohos.router';
+import { DatabaseHelper } from '../common/DatabaseHelper';
+import { AssetModel } from '../common/AssetModel';
+
+@Entry
+@Component
+struct AssetDetailPage {
+    @State asset: AssetModel | null = null;
+    @State isEdit: boolean = false;
+    private assetId: number = -1;
+
+    aboutToAppear() {
+        const params = router.getParams() as Record&lt;string, number&gt;;
+        this.assetId = params['id'];
+        this.loadDetail();
+    }
+
+    async loadDetail() {
+        const all = await DatabaseHelper.getInstance().queryAllAssets();
+        this.asset = all.find(item => item.id === this.assetId) || null;
+    }
+
+    async updateAsset() {
+        if (!this.asset) return;
+        await DatabaseHelper.getInstance().updateAsset(this.asset);
+        this.isEdit = false;
+        alert('更新成功');
+    }
+
+    async deleteAsset() {
+        if (!this.asset) return;
+        await DatabaseHelper.getInstance().deleteAsset(this.asset.id!);
+        router.back();
+    }
+
+    build() {
+        if (!this.asset) {
+            return Column() { Text('加载中...') }.width('100%').height('100%');
+        }
+        return Column() {
+            Text(isEdit ? '编辑资产' : '资产详情')
+                .fontSize(24)
+                .fontWeight(FontWeight.Bold)
+
+            if (isEdit) {
+                TextInput({ text: this.asset.name })
+                    .onChange(val => this.asset!.name = val)
+                TextInput({ text: this.asset.category })
+                    .onChange(val => this.asset!.category = val)
+                // ... 其他字段类似
+                Button('保存修改')
+                    .onClick(() => this.updateAsset())
+                Button('取消')
+                    .onClick(() => this.isEdit = false)
+            } else {
+                Text(`名称：${this.asset.name}`)
+                Text(`分类：${this.asset.category}`)
+                Text(`数量：${this.asset.quantity}`)
+                Text(`单价：${this.asset.price}`)
+                Row() {
+                    Button('编辑')
+                        .onClick(() => this.isEdit = true)
+                    Button('删除')
+                        .backgroundColor('#d32f2f')
+                        .onClick(() => this.deleteAsset())
+                }
+            }
+        }
+        .padding(20)
+    }
+}</pre>
+        </div>
+
+        <div class="important-note">
+            <p><span class="tip-icon">🎉</span> <strong>集成成功标志：</strong> 能够完整执行“添加资产→列表显示→点击详情→编辑/删除→列表自动刷新”全流程！</p>
+        </div>
+    </div>
+
+    <!-- ========= 互动活动 ========= -->
+    <div class="section">
+        <h2>🎮 互动活动 · 代码接力赛</h2>
+        <div class="task-box">
+            <h3 style="margin-top:0;">「集成闯关」小组挑战</h3>
+            <p><strong>规则：</strong> 每组必须完成上述所有代码集成，并成功运行 Demo。</p>
+            <ol>
+                <li><strong>第一关（15分钟）：</strong> DatabaseHelper 创建成功，无报错。</li>
+                <li><strong>第二关（15分钟）：</strong> 列表页能显示数据库中的资产（可先手动插入测试数据）。</li>
+                <li><strong>第三关（15分钟）：</strong> 添加资产功能正常，列表自动刷新。</li>
+                <li><strong>第四关（10分钟）：</strong> 编辑/删除功能正常。</li>
+            </ol>
+            <div style="background:#fef3e2; padding: 16px; border-radius: 24px; margin-top: 15px;">
+                <p><strong>🏆 奖励：</strong> 最快完成全流程的小组获得“集成大师”称号，平时分+5分。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========= 课堂小结 & 课后任务 ========= -->
+    <div class="section">
+        <h2>📝 课堂小结 & 课后任务</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h4>✨ 这节课我们解锁了</h4>
+                <ul style="margin-left: 1.2rem;">
+                    <li>✅ 模块集成思想：UI+数据+网络协同工作</li>
+                    <li>✅ DatabaseHelper 完整实现（增删改查）</li>
+                    <li>✅ 列表页、录入页、详情页的数据联动</li>
+                    <li>✅ 页面间传参与返回刷新机制</li>
+                    <li>✅ 运行出功能完整的资产管理系统Demo</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>📂 课后必做任务</h4>
+                <ul>
+                    <li>📌 任务1：完善资产录入页的字段验证（数量不能为负数、价格格式校验）。</li>
+                    <li>📌 任务2：为列表页添加“搜索”功能（按名称模糊查询）。</li>
+                    <li>📌 任务3：预习“网络模块集成”，将新增的资产同步到模拟云端。</li>
+                    <li>🌟 挑战任务：实现资产分类统计图表（柱状图展示各类资产数量）。</li>
+                </ul>
+            </div>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">🔔</span> 下节课（第10周 · 星期四 第9-10节 15:50-17:20）我们将实战：<strong>数据功能模块测试与调试（教案074）</strong>，学习单元测试、日志调试、性能优化！记得带完整项目代码。</p>
+            <p>🏆 距离参赛作品又近了一步，坚持就是胜利！</p>
+        </div>
+    </div>
+
+    <!-- 导出Word按钮 -->
+    <div class="btn-group">
+        <button class="button" onclick="exportToWord()">📥 导出Word教案（第73课）</button>
+    </div>
+    <footer>
+        ⚡ 本教案为2课时（80分钟），包含完整集成代码与实训步骤，适合技师学院零基础集训队。<br>
+        🧑‍🏫 教师可根据学生进度灵活调整代码细节，重点保证最终Demo能运行。
+    </footer>
+</div>
+
+<script>
+    function exportToWord() {
+        let docHtml = document.documentElement.cloneNode(true);
+        let btnGroup = docHtml.querySelector('.btn-group');
+        if(btnGroup) btnGroup.style.display = 'none';
+        let htmlContent = '<!DOCTYPE html>\n' + docHtml.outerHTML;
+        const blob = new Blob([htmlContent], { type: 'application/msword' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.download = '教案073_第10周_资产管理核心功能集成.doc';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        alert('教案Word文档已生成！\n文件名：教案073_第10周_资产管理核心功能集成.doc');
+    }
+</script>
+</body>
+</html>

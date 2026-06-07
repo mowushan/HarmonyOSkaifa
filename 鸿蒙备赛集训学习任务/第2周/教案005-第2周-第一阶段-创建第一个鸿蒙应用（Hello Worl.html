@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教案005：创建第一个鸿蒙应用（Hello World）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
+            line-height: 1.65;
+            color: #1f2d3a;
+            background-color: #f0f6fc;
+            padding: 30px 20px;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px rgba(0, 40, 60, 0.1);
+            overflow: hidden;
+            padding: 30px 35px 50px;
+        }
+        h1 {
+            font-size: 2.4rem;
+            background: linear-gradient(135deg, #0a2e4a, #0078d4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-align: center;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            background: #e9f2fa;
+            display: inline-block;
+            width: auto;
+            margin: 0 auto 20px;
+            padding: 8px 28px;
+            border-radius: 60px;
+            color: #0066a0;
+            font-weight: 500;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .header-meta {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            background: #eef3fc;
+            padding: 12px 20px;
+            border-radius: 40px;
+            margin: 20px 0 30px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #004d7a;
+            border: 1px solid #cde0ef;
+        }
+        .section {
+            background: white;
+            border-radius: 28px;
+            margin-bottom: 35px;
+            padding: 0 5px;
+        }
+        h2 {
+            font-size: 1.8rem;
+            color: #0a4b6e;
+            border-left: 8px solid #0078d4;
+            padding-left: 20px;
+            margin: 30px 0 20px 0;
+            background: linear-gradient(to right, #f0f8ff, #ffffff);
+            border-radius: 0 20px 20px 0;
+        }
+        h3 {
+            font-size: 1.45rem;
+            margin: 25px 0 12px 0;
+            color: #1f6392;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px dotted #b9d9f0;
+            padding-bottom: 8px;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 18px 20px;
+            border: 1px solid #dcecf5;
+            box-shadow: 0 6px 14px rgba(0, 40, 60, 0.05);
+            transition: all 0.2s;
+        }
+        .card:hover {
+            border-color: #0078d4;
+            box-shadow: 0 12px 22px rgba(0, 120, 212, 0.12);
+        }
+        .card h4 {
+            font-size: 1.35rem;
+            color: #005a9c;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 4px solid #0078d4;
+            padding-left: 14px;
+        }
+        .badge {
+            background: #0078d4;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 10px;
+            border-radius: 30px;
+            font-weight: normal;
+            margin-left: 8px;
+        }
+        .task-box {
+            background: #f0f9fe;
+            border-left: 6px solid #28a745;
+            padding: 18px 24px;
+            border-radius: 24px;
+            margin: 20px 0;
+        }
+        .important-note {
+            background: #fff8e7;
+            border-left: 6px solid #ff9800;
+            padding: 18px 24px;
+            border-radius: 24px;
+            margin: 20px 0;
+        }
+        .code-block {
+            background: #1e2f3c;
+            color: #e0f2fe;
+            padding: 16px 22px;
+            border-radius: 20px;
+            font-family: 'JetBrains Mono', 'Cascadia Code', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 5px solid #0078d4;
+        }
+        .code-block .keyword { color: #ff9d5a; font-weight: bold; }
+        .code-block .string { color: #ce9178; }
+        .code-block .comment { color: #6a9955; }
+        .code-block .function { color: #dcdcaa; }
+        .step-guide {
+            background: #f8fafd;
+            border-radius: 28px;
+            padding: 20px 28px;
+            counter-reset: step-counter;
+            list-style: none;
+        }
+        .step-guide li {
+            counter-increment: step-counter;
+            margin-bottom: 20px;
+            padding-left: 52px;
+            position: relative;
+            font-weight: 500;
+        }
+        .step-guide li::before {
+            content: counter(step-counter);
+            background: #0078d4;
+            color: white;
+            width: 34px;
+            height: 34px;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            left: 0;
+            top: -2px;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px 0 20px;
+        }
+        .button {
+            background: linear-gradient(95deg, #0078d4, #005a9e);
+            border: none;
+            color: white;
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 5px 12px rgba(0, 90, 158, 0.3);
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(95deg, #008ae6, #006bb3);
+            box-shadow: 0 10px 20px rgba(0, 90, 158, 0.4);
+        }
+        .tip-icon {
+            font-size: 1.4rem;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        .success-box {
+            background: #e8f5e9;
+            border-left: 6px solid #4caf50;
+            padding: 16px 24px;
+            border-radius: 24px;
+            margin: 20px 0;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #6f8ea3;
+            border-top: 1px solid #d4e2ef;
+            padding-top: 25px;
+            margin-top: 35px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        th {
+            background: #0078d4;
+            color: white;
+            padding: 10px;
+            font-weight: 600;
+        }
+        td {
+            border: 1px solid #cfdfec;
+            padding: 10px;
+        }
+        .time-line {
+            display: flex;
+            justify-content: space-between;
+            background: #eef3fc;
+            padding: 12px 20px;
+            border-radius: 30px;
+            margin: 15px 0;
+            font-weight: 500;
+        }
+        @media (max-width: 680px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.9rem; }
+        }
+    
+            pre, .code-block {
+                white-space: pre-wrap !important;
+                word-wrap: break-word !important;
+                font-family: monospace !important;
+                line-height: 1.5 !important;
+            }
+        </style>
+</head>
+<body>
+<div class="container">
+    <h1>🎉 第一个鸿蒙应用 · Hello World</h1>
+    <div style="text-align: center;">
+        <span class="subtitle">🏆 从零到一 · 让代码在手机上“开口说话”</span>
+    </div>
+    <div class="header-meta">
+        <span>📅 第2周 · 星期二 第5-6节 (12:30-14:00)</span>
+        <span>⏱️ 2课时 (80分钟)  |  💻 理实一体化 · 实训为主</span>
+        <span>🎯 授课对象：技师学院 · 零基础集训队</span>
+    </div>
+
+    <!-- 课时安排提示 -->
+    <div class="time-line">
+        <span>🕐 第1节 (40分钟)：知识讲解 + 环境准备</span>
+        <span>☕ 课间休息 10分钟</span>
+        <span>🕑 第2节 (40分钟)：动手实训 + 闯关挑战</span>
+    </div>
+
+    <!-- ========= 学习目标卡片 ========= -->
+    <div class="section">
+        <h2>🎯 学习目标 · 这堂课我们要拿下什么？</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h4>📘 知识点1 <span class="badge">鸿蒙项目结构</span></h4>
+                <p><strong>学到：</strong> 鸿蒙应用的基本组成：entry模块、ets文件夹、配置文件等。</p>
+                <p>💡 类比：就像建房子要先看懂户型图，项目结构就是代码的“户型图”。</p>
+            </div>
+            <div class="card">
+                <h4>🛠️ 技能点1 <span class="badge">创建项目</span></h4>
+                <p><strong>学会：</strong> 用DevEco Studio创建第一个鸿蒙项目，选择模板和配置。</p>
+            </div>
+            <div class="card">
+                <h4>📘 知识点2 <span class="badge">Ability与页面</span></h4>
+                <p><strong>学到：</strong> UIAbility是应用的入口，@Entry和@Component装饰器的作用。</p>
+            </div>
+            <div class="card">
+                <h4>🛠️ 技能点2 <span class="badge">运行程序</span></h4>
+                <p><strong>学会：</strong> 在模拟器或真机上运行Hello World，看到“你好，鸿蒙”。</p>
+            </div>
+            <div class="card">
+                <h4>📘 知识点3 <span class="badge">预览器使用</span></h4>
+                <p><strong>学到：</strong> 实时预览功能，不用运行就能看到界面变化。</p>
+            </div>
+            <div class="card">
+                <h4>🛠️ 技能点3 <span class="badge">修改文字</span></h4>
+                <p><strong>学会：</strong> 修改页面上的文字，让程序变成“我的第一个鸿蒙应用”。</p>
+            </div>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">💡</span> <strong>老师暖心提示：</strong> 今天的目标是——每个人都成功运行出第一个鸿蒙程序！哪怕只是改了几个字，也是巨大进步。遇到报错不要慌，我们一起解决。</p>
+        </div>
+    </div>
+
+    <!-- ========= 知识讲解 ========= -->
+    <div class="section">
+        <h2>🧩 知识讲解 · 鸿蒙应用的“诞生记”</h2>
+        
+        <h3>1. 鸿蒙应用长什么样？—— 项目结构大揭秘</h3>
+        <div class="task-box">
+            <p><span class="tip-icon">🏗️</span> <strong>趣味比喻：</strong> 一个鸿蒙项目就像一个“智能房屋”：</p>
+            <ul>
+                <li><strong>entry/</strong> → 房子的大门（应用入口模块）</li>
+                <li><strong>ets/</strong> → 房间里的家具（代码文件）</li>
+                <li><strong>resources/</strong> → 墙纸和装饰（图片、文字资源）</li>
+                <li><strong>module.json5</strong> → 房屋说明书（模块配置文件）</li>
+            </ul>
+            <p>📌 <strong>最重要文件：</strong> <code>entry/src/main/ets/pages/Index.ets</code> —— 这就是我们看到的第一个页面！</p>
+        </div>
+
+        <h3>2. 第一个页面代码解读 —— 让屏幕显示文字</h3>
+        <pre style="white-space: pre-wrap; word-wrap: break-word; font-family: monospace; line-height: 1.5;" class="code-block">
+            <span class="comment">// Index.ets - 这是我们的第一个鸿蒙页面</span>
+            <span class="keyword">@Entry</span>      <span class="comment">// 标记这是应用的入口页面</span>
+            <span class="keyword">@Component</span>   <span class="comment">// 标记这是一个自定义组件</span>
+            <span class="keyword">struct</span> <span class="function">Index</span> {
+              <span class="function">build</span>() {
+                <span class="function">Column</span>() {           <span class="comment">// 垂直布局容器</span>
+                  <span class="function">Text</span>(<span class="string">'Hello World'</span>)   <span class="comment">// 显示文字的组件</span>
+                    .fontSize(50)               <span class="comment">// 设置字体大小</span>
+                    .fontWeight(FontWeight.Bold) <span class="comment">// 设置粗体</span>
+                    .fontColor(<span class="string">'#0078d4'</span>)       <span class="comment">// 设置颜色</span>
+                }
+                .width(<span class="string">'100%'</span>)        <span class="comment">// 宽度占满屏幕</span>
+                .height(<span class="string">'100%'</span>)       <span class="comment">// 高度占满屏幕</span>
+                .justifyContent(FlexAlign.Center) <span class="comment">// 内容居中</span>
+              }
+            }
+        </pre>
+        <p><strong>🔍 逐行解读（老师边指边讲）：</strong></p>
+        <ul>
+            <li><code>@Entry</code> → 告诉系统：“嘿，这个页面是应用的入口！”</li>
+            <li><code>@Component</code> → 声明这是一个可复用的UI组件</li>
+            <li><code>build()</code> → 描述这个页面长什么样子的函数</li>
+            <li><code>Column</code> → 把东西竖着排（就像排队一样）</li>
+            <li><code>Text()</code> → 显示文字，括号里写什么就显示什么</li>
+            <li><code>.fontSize(50)</code> → 点语法给文字添加样式</li>
+        </ul>
+        <div class="success-box">
+            <p><span class="tip-icon">✨</span> <strong>小实验：</strong> 如果把 <code>'Hello World'</code> 改成 <code>'你好，鸿蒙！'</code> 会怎样？—— 等下我们就动手试试！</p>
+        </div>
+
+        <h3>3. 模拟器 vs 真机 —— 在哪里看结果？</h3>
+        <div class="card-grid">
+            <div class="card">
+                <h4>📱 本地模拟器</h4>
+                <p>电脑上虚拟一个手机，不用真机也能运行。适合初学调试，启动稍慢但方便。</p>
+            </div>
+            <div class="card">
+                <h4>📲 真机调试</h4>
+                <p>用自己的鸿蒙手机（或平板）直接运行，体验最真实。需要开启开发者模式。</p>
+            </div>
+            <div class="card">
+                <h4>👀 预览器</h4>
+                <p>最快速的方式！右侧Previewer窗口，代码改完立刻看到效果，不用编译。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========= 超详细实训指导 ========= -->
+    <div class="section">
+        <h2>⚙️ 技能实训 · 手把手带你跑通Hello World</h2>
+        <p style="background:#e2f0fe; border-radius: 40px; padding: 8px 20px; display: inline-block; margin-bottom: 15px;">✅ 本次实训目标：每人成功运行第一个鸿蒙应用，并学会修改界面文字</p>
+
+        <h3>🔧 实训准备：确认DevEco Studio已安装</h3>
+        <div class="step-guide">
+            <li>双击桌面DevEco Studio图标，打开软件。</li>
+            <li>如果提示“SDK未安装”，按照向导完成SDK下载（约2GB，可课下提前完成）。</li>
+            <li>确认左下角或欢迎页面显示“No Project”，准备创建新项目。</li>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">⚠️</span> 如果SDK还没下载完，今天先使用“预览器”功能，也能看到效果。课后记得挂机下载。</p>
+        </div>
+
+        <h3>🧪 实训任务一：创建第一个鸿蒙项目（15分钟）</h3>
+        <div class="step-guide">
+            <li><strong>点击“Create Project”：</strong> 在欢迎页面选择“Create Project”。</li>
+            <li><strong>选择模板：</strong> 选择“Empty Ability”（空模板），这是最基础的Hello World模板。</li>
+            <li><strong>配置项目：</strong>
+                <ul style="margin-top: 8px;">
+                    <li>Project name: <code>MyFirstHarmonyApp</code></li>
+                    <li>Package name: <code>com.yourname.myfirstapp</code>（可以换成自己的名字拼音）</li>
+                    <li>Save location: 选择D:\HarmonyProjects（自己建一个文件夹）</li>
+                    <li>Compatible API version: 选择最新的稳定版（如API 9或更高）</li>
+                </ul>
+            </li>
+            <li>点击“Finish”，等待项目构建完成（第一次会下载依赖，稍等1-2分钟）。</li>
+        </div>
+        <div class="task-box">
+            <p>🎯 <strong>检查点：</strong> 左侧项目目录中能看到 <code>entry/src/main/ets/pages/Index.ets</code> 文件，双击打开它，看到代码！</p>
+        </div>
+
+        <h3>🧪 实训任务二：使用预览器查看效果（10分钟）</h3>
+        <div class="step-guide">
+            <li>在打开 <code>Index.ets</code> 文件后，看右侧有没有“Previewer”窗口。</li>
+            <li>如果没有，点击菜单栏：<strong>View → Tool Windows → Previewer</strong>。</li>
+            <li>预览器里应该显示一个白色屏幕，中间有“Hello World”文字。</li>
+            <li><strong>互动挑战：</strong> 把代码中的 <code>'Hello World'</code> 改成 <code>'你好，鸿蒙！我是XXX'</code>（XXX换成自己名字），观察预览器里的文字是否立刻变化？</li>
+        </div>
+        <div class="success-box">
+            <p><span class="tip-icon">🎉</span> 恭喜！你已经体验了“实时预览”的魔力，这就是声明式UI的魅力——代码即界面！</p>
+        </div>
+
+        <h3>🧪 实训任务三：运行到模拟器/真机（15分钟）</h3>
+        <div class="step-guide">
+            <li><strong>创建模拟器（如果没有）：</strong> 点击菜单 Tools → Device Manager → 点击“+”号 → 选择手机型号（如Pixel 6）→ 下载镜像 → 创建完成。</li>
+            <li><strong>启动模拟器：</strong> 在Device Manager中点播放按钮启动模拟器（第一次启动较慢，约2分钟）。</li>
+            <li><strong>运行项目：</strong> 点击工具栏绿色的三角形“Run”按钮（或按Shift+F10）。</li>
+            <li><strong>选择设备：</strong> 在弹出的窗口中选择刚才启动的模拟器，点击OK。</li>
+            <li><strong>等待编译安装：</strong> 下方Build窗口出现“Install successfully”后，模拟器屏幕上就会显示你的应用！</li>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">📱</span> <strong>真机调试小贴士：</strong> 如果有鸿蒙手机，用USB线连接电脑，手机开启“开发者模式”和“USB调试”，点击运行后选择真机即可。老师会巡回指导。</p>
+        </div>
+
+        <h3>🧪 实训任务四：代码改造大闯关（15分钟）</h3>
+        <div class="card-grid">
+            <div class="card">
+                <h4>🎯 闯关1：改文字</h4>
+                <p>把文字改成“鸿蒙开发，我来了！” 并加一行副标题（复制一个Text组件）。</p>
+            </div>
+            <div class="card">
+                <h4>🎯 闯关2：改颜色</h4>
+                <p>把字体颜色改成红色（.fontColor('#ff0000')）或者自己喜欢的颜色。</p>
+            </div>
+            <div class="card">
+                <h4>🎯 闯关3：加背景</h4>
+                <p>给Column加个背景色：.backgroundColor('#f0f0f0')，看看效果。</p>
+            </div>
+            <div class="card">
+                <h4>🏆 终极挑战</h4>
+                <p>显示一张图片！在resources/base/media里放一张图片，用Image组件显示出来。</p>
+            </div>
+        </div>
+        <pre style="white-space: pre-wrap; word-wrap: break-word; font-family: monospace; line-height: 1.5;" class="code-block">
+            <span class="comment">// 终极挑战参考代码</span>
+            <span class="function">Column</span>() {
+              <span class="function">Text</span>(<span class="string">'鸿蒙开发，我来了！'</span>)
+                .fontSize(30)
+                .fontColor(<span class="string">'#ff6b6b'</span>)
+              <span class="function">Text</span>(<span class="string">'第二行：这是我的第一个应用'</span>)
+                .fontSize(20)
+              <span class="function">Image</span>(<span class="string">'$r("app.media.icon")'</span>)  <span class="comment">// 显示应用图标</span>
+                .width(100)
+                .height(100)
+            }
+            .width(<span class="string">'100%'</span>)
+            .height(<span class="string">'100%'</span>)
+            .justifyContent(FlexAlign.Center)
+        </pre>
+    </div>
+
+    <!-- ========= 互动活动 ========= -->
+    <div class="section">
+        <h2>🎮 互动活动 · Hello World 展示会</h2>
+        <div class="task-box">
+            <h3 style="margin-top:0;">「我的第一个鸿蒙应用」作品秀</h3>
+            <p><strong>活动流程：</strong></p>
+            <ol>
+                <li>每位同学（或每组）把自己的应用运行起来，可以是在模拟器上，也可以是预览器截图。</li>
+                <li>用一句话介绍：“我修改了哪里？加了什么效果？”</li>
+                <li>全班投票选出“最佳创意奖”、“最美配色奖”、“最强技术奖”。</li>
+            </ol>
+            <div style="background:#fef3e2; padding: 16px; border-radius: 24px; margin-top: 15px;">
+                <p><strong>🏆 奖励：</strong> 获奖同学获得团队积分+鸿蒙贴纸，优秀作品可以展示在班级墙上！</p>
+                <p><strong>💬 老师点评：</strong> 表扬每一位成功运行的同学，鼓励遇到困难的同学，强调“第一个程序是里程碑”。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========= 常见错误与解决 ========= -->
+    <div class="section">
+        <h2>🔧 常见错误 · 别怕，我们帮你搞定</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h4>❌ 模拟器启动失败</h4>
+                <p>解决：检查电脑虚拟化是否开启（BIOS设置），或重启DevEco Studio。</p>
+            </div>
+            <div class="card">
+                <h4>❌ 编译报错“SDK not found”</h4>
+                <p>解决：菜单 File → Settings → SDK Manager，下载对应API版本的SDK。</p>
+            </div>
+            <div class="card">
+                <h4>❌ 预览器不显示</h4>
+                <p>解决：点击右上角刷新按钮，或关闭重新打开Index.ets文件。</p>
+            </div>
+            <div class="card">
+                <h4>❌ 真机连接不上</h4>
+                <p>解决：换一根数据线，检查USB调试是否开启，安装华为手机助手驱动。</p>
+            </div>
+        </div>
+        <div class="important-note">
+            <p><span class="tip-icon">🤝</span> <strong>互助原则：</strong> 遇到报错先看红色提示，看不懂就截图发群，老师或同学帮忙。鸿蒙社区也很活跃，要学会搜索错误信息！</p>
+        </div>
+    </div>
+
+    <!-- ========= 课堂小结 & 课后任务 ========= -->
+    <div class="section">
+        <h2>📝 课堂小结 & 课后任务</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h4>✨ 今天我们解锁了</h4>
+                <ul style="margin-left: 1.2rem;">
+                    <li>✅ 鸿蒙项目结构：entry、ets、resources的含义</li>
+                    <li>✅ 创建第一个项目，理解@Entry和@Component</li>
+                    <li>✅ 使用预览器实时查看效果</li>
+                    <li>✅ 运行到模拟器/真机，看到Hello World</li>
+                    <li>✅ 修改文字、颜色，给页面加背景和图片</li>
+                    <li>✅ 学会看报错信息，解决常见问题</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>📂 课后必做任务（30分钟）</h4>
+                <ul>
+                    <li>📌 <strong>任务1：</strong> 美化你的第一个应用——至少修改文字、颜色、加一张图片，截图发群打卡。</li>
+                    <li>📌 <strong>任务2：</strong> 录制15秒小视频，展示你的应用运行效果，并说一句“我是鸿蒙开发者”。</li>
+                    <li>📌 <strong>任务3（挑战）：</strong> 尝试让点击屏幕时文字变色（预习@State状态管理）。</li>
+                    <li>📌 <strong>预习：</strong> 看《鸿蒙第一课》第3集“常用组件介绍”，下节课我们要做更漂亮的界面！</li>
+                </ul>
+            </div>
+        </div>
+        <div class="success-box">
+            <p><span class="tip-icon">🏁</span> <strong>里程碑达成：</strong> 你已经成功迈出鸿蒙开发的第一步！从今天起，你不再只是“用手机的人”，而是“创造手机应用的人”。继续加油！</p>
+        </div>
+    </div>
+
+    <!-- 导出Word按钮 -->
+    <div class="btn-group">
+        <button class="button" onclick="exportToWord()">📥 导出Word教案（Hello World）</button>
+    </div>
+    <footer>
+        ⚡ 本教案为2课时（80分钟），包含完整的实训步骤和代码示例，适合零基础集训队。<br>
+        🧑‍🏫 教师可根据学生进度灵活调整，重点在于让每个学生都能成功运行第一个程序，建立信心。
+    </footer>
+</div>
+
+<script>
+    function exportToWord() {
+        let docHtml = document.documentElement.cloneNode(true);
+        let btnGroup = docHtml.querySelector('.btn-group');
+        if(btnGroup) btnGroup.style.display = 'none';
+        let htmlContent = '<!DOCTYPE html>\n' + docHtml.outerHTML;
+        const blob = new Blob([htmlContent], { type: 'application/msword' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.download = '教案005_创建第一个鸿蒙应用_HelloWorld.doc';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        alert('教案Word文档已生成！\n文件名：教案005_创建第一个鸿蒙应用_HelloWorld.doc');
+    }
+</script>
+</body>
+</html>
