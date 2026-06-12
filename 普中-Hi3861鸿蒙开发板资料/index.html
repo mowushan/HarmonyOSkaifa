@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>普中 Hi3861 开发板资料</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #f1f5f9;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #94a3b8;
+            text-decoration: none;
+            padding: 10px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(8px);
+            margin-bottom: 30px;
+        }
+        .back-btn:hover {
+            color: #38bdf8;
+            border-color: #38bdf8;
+            background: rgba(56, 189, 248, 0.08);
+            transform: translateX(-3px);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 25px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 2rem;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+        h2 {
+            color: #7dd3fc;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+        .lesson-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 18px;
+        }
+        .lesson-item {
+            background: rgba(56, 189, 248, 0.08);
+            border-radius: 12px;
+            padding: 16px 20px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(56, 189, 248, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        .lesson-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.2), transparent);
+            transition: all 0.6s ease;
+        }
+        .lesson-item:hover::before {
+            left: 100%;
+        }
+        .lesson-item:hover {
+            background: rgba(56, 189, 248, 0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            border-color: rgba(56, 189, 248, 0.4);
+        }
+        a {
+            color: #e0f2fe;
+            text-decoration: none;
+            font-weight: 500;
+            display: block;
+            line-height: 1.5;
+        }
+        .type-tag {
+            font-size: 0.8rem;
+            color: #38bdf8;
+            margin-bottom: 6px;
+        }
+        @media (max-width: 768px) {
+            .lesson-grid {
+                grid-template-columns: 1fr;
+            }
+            h1 {
+                font-size: 1.6rem;
+            }
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="currentColor"/>
+            </svg>
+            返回网站首页
+        </a>
+
+        <header>
+            <h1>📂 普中 Hi3861 开发板全套资料</h1>
+        </header>
+
+        <div class="card">
+            <h2>文件与子目录列表</h2>
+            <div class="lesson-grid">
+                <!-- 文件夹 -->
+                <div class="lesson-item">
+                    <div class="type-tag">文件夹</div>
+                    <a href="1--用户必看/">1--用户必看</a>
+                </div>
+                <div class="lesson-item">
+                    <div class="type-tag">文件夹</div>
+                    <a href="2--开发板原理图/">2--开发板原理图</a>
+                </div>
+                <div class="lesson-item">
+                    <div class="type-tag">文件夹</div>
+                    <a href="3--手把手教你学鸿蒙OS/">3--手把手教你学鸿蒙OS</a>
+                </div>
+                <div class="lesson-item">
+                    <div class="type-tag">文件夹</div>
+                    <a href="4--实验程序/">4--实验程序</a>
+                </div>
+                <div class="lesson-item">
+                    <div class="type-tag">文件夹</div>
+                    <a href="5--开发工具/">5--开发工具</a>
+                </div>
+                <div class="lesson-item">
+                    <div class="type-tag">文件夹</div>
+                    <a href="6--芯片资料/">6--芯片资料</a>
+                </div>
+                <div class="lesson-item">
+                    <div class="type-tag">文件夹</div>
+                    <a href="7--Hi3861相关资料/">7--Hi3861相关资料</a>
+                </div>
+                <!-- 文件 -->
+                <div class="lesson-item">
+                    <div class="type-tag">PDF文档</div>
+                    <a href="普中-Hi3861开发攻略_V10--基于鸿蒙OS.pdf">普中-Hi3861开发攻略_V10--基于鸿蒙OS.pdf</a>
+                </div>
+                <div class="lesson-item">
+                    <div class="type-tag">TXT说明</div>
+                    <a href="普中-Hi3861开发板资料结构（必看）.txt">普中-Hi3861开发板资料结构（必看）.txt</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
